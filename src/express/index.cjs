@@ -17,9 +17,23 @@ const connection = mysql.createConnection({
 // })
 
 app.get('/posty', (req,res) => {
-    connection.query(`SELECT * FROM posty`, (err, rows, fields) => {
-      res.send(rows)
+    connection.query(`SELECT * FROM posty ORDER BY id DESC LIMIT 20`, (err, rows, fields) => {
+      if(rows){
+        res.send(rows)
+      }else{
+        res.send({ status: 0, text: "Przepraszamy... Nie udało się połączyć z bazą danych :("})
+      }
     })
+})
+
+app.get('/post/:id', (req,res) => {
+  connection.query(`SELECT * FROM posty WHERE id = ${req.params.id}`, (err, rows, fields) => {
+    if(rows.length == 1){
+      res.send(rows)
+    }else{
+      res.send({ status: 0, text: "Nie znaleziono posta..."})
+    }
+  })
 })
 
 app.listen(3000)

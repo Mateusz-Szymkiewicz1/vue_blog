@@ -1,6 +1,6 @@
 <script setup>
   import { ref } from 'vue'
-
+  const props = defineProps(['url'])
   const menu = ref(false)
   const toggleMenu = () => {
       if(menu.value){
@@ -24,9 +24,9 @@
         </button>
       </div>
       <div class="hidden md:flex md:gap-x-12 text-md font-semibold leading-6 text-gray-900">
-        <a href="/">Strona główna</a>
-        <a href="/about">O mnie</a>
-        <a href="/kontakt">Kontakt</a>
+        <a href="/" :class="url == 'home' ? 'font-bold underline decoration-violet-400' : null">Strona główna</a>
+        <a href="/about" :class="url == 'about' ? 'font-bold underline decoration-violet-400' : null">O mnie</a>
+        <a href="/kontakt" :class="url == 'kontakt' ? 'font-bold underline decoration-violet-400' : null">Kontakt</a>
       </div>
       <div class="hidden md:flex md:flex-1 md:justify-end">
         <a href="/logowanie" class="text-md font-semibold leading-6 text-gray-900">Zaloguj <span aria-hidden="true">&rarr;</span></a>
@@ -45,9 +45,9 @@
         <div class="mt-12 flow-root">
           <div class="-my-6 divide-y divide-gray-600/10">
             <div class="space-y-2 py-6">
-              <a href="/" class="-mx-3 block rounded-lg px-3 py-2 text-lg font-semibold leading-7 text-gray-900 hover:bg-gray-50">Strona główna</a>
-              <a href="/about" class="-mx-3 block rounded-lg px-3 py-2 text-lg font-semibold leading-7 text-gray-900 hover:bg-gray-50">O mnie</a>
-              <a href="/kontakt" class="-mx-3 block rounded-lg px-3 py-2 text-lg font-semibold leading-7 text-gray-900 hover:bg-gray-50">Kontakt</a>
+              <a href="/" class="-mx-3 block rounded-lg px-3 py-2 text-lg font-semibold leading-7 text-gray-900 hover:bg-gray-50" :class="url == 'home' ? 'bg-violet-100 hover:bg-violet-200' : null">Strona główna</a>
+              <a href="/about" class="-mx-3 block rounded-lg px-3 py-2 text-lg font-semibold leading-7 text-gray-900 hover:bg-gray-50" :class="url == 'about' ? 'bg-violet-100 hover:bg-violet-200' : null">O mnie</a>
+              <a href="/kontakt" class="-mx-3 block rounded-lg px-3 py-2 text-lg font-semibold leading-7 text-gray-900 hover:bg-gray-50" :class="url == 'kontakt' ? 'bg-violet-100 hover:bg-violet-200' : null">Kontakt</a>
             </div>
             <div class="py-2">
               <a href="/logowanie" class="-mx-3 block rounded-lg px-3 py-2.5 text-lg font-semibold leading-7 text-gray-900 hover:bg-gray-50">Zaloguj się</a>

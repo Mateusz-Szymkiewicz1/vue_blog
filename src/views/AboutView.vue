@@ -1,5 +1,10 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
+  <div class="about m-6 lg:m-8 !mt-24 pr-10 md:pr-32 !mb-32">
+    <h1 class="font-semibold text-4xl pb-10">O mnie</h1>  
+    <p class="text-lg text-gray-700">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quidem voluptate, reprehenderit cupiditate, nostrum perferendis enim neque ducimus quos quae ratione repudiandae odio quasi explicabo? Rem quibusdam esse dicta repudiandae ullam aliquid doloremque praesentium repellat excepturi neque nihil a soluta ipsa fugit, mollitia ea cumque ut minima recusandae. Amet dolorum dolore ullam nisi incidunt similique temporibus asperiores voluptate voluptatum sequi saepe, aliquam quae laudantium quo minus atque, illum nulla libero. Recusandae amet atque suscipit neque ipsam nobis tenetur nostrum praesentium vel eligendi dolore porro, necessitatibus dolorem sunt magnam quod fugit ut quo, minima quae aperiam voluptatibus pariatur repellat? Iusto, dignissimos expedita!
+    </p>
+    <img src="../assets/placeholder.png">
+    <p class="text-lg text-gray-700">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quidem voluptate, reprehenderit cupiditate, nostrum perferendis enim neque ducimus quos quae ratione repudiandae odio quasi explicabo? Rem quibusdam esse dicta repudiandae ullam aliquid doloremque praesentium repellat excepturi neque nihil a soluta ipsa fugit, mollitia ea cumque ut minima recusandae. Amet dolorum dolore ullam nisi incidunt similique temporibus asperiores voluptate voluptatum sequi saepe, aliquam quae laudantium quo minus atque, illum nulla libero. Recusandae amet atque suscipit neque ipsam nobis tenetur nostrum praesentium vel eligendi dolore porro, necessitatibus dolorem sunt magnam quod fugit ut quo, minima quae aperiam voluptatibus pariatur repellat? Iusto, dignissimos expedita!
+    </p>
   </div>
 </template>

@@ -57,7 +57,7 @@
         </div>
         <Multiselect class="md:mt-16 mt-4 max-w-72 !p-0 !text-sm !text-gray-400 !h-[38px] !bg-violet-100 rounded-lg border border-gray-300" :max="5" :limit="10" mode="tags" placeholder="Tags" v-model="selected_tags" :options="tags">
        <template v-slot:option="{ option }">
-         <span class="p-1 w-full px-2 font-normal bg-violet-50 hover:bg-violet-100">{{ option.value }}</span>
+         <span class="p-1 w-full px-2 font-normal bg-violet-50 text-gray-700 hover:bg-violet-100">{{ option.value }}</span>
        </template>
     </Multiselect>
     </div>

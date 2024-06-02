@@ -28,7 +28,7 @@ app.get('/posty', (req,res) => {
 
 app.get('/post/:id', (req,res) => {
   connection.query(`SELECT * FROM posty WHERE id = ${req.params.id}`, (err, rows, fields) => {
-    if(rows.length == 1){
+    if(rows && rows.length == 1){
       res.send(rows)
     }else{
       res.send({ status: 0, text: "Nie znaleziono posta..."})

@@ -1,5 +1,5 @@
 <template>
-  <div class="grid p-10 my-24 mb-32 md:grid-cols-2 items-center gap-16 mx-auto max-w-4xl">
+  <div class="grid p-5 my-20 mb-32 md:grid-cols-2 items-center gap-16 mx-auto max-w-4xl">
             <div>
                 <h1 class="text-4xl font-semibold">Kontakt</h1>
                 <p class="text-md text-gray-400 mt-3">Pytania? Propozycje? Skontaktuj się ze mną i podziel się swoimi myślami!</p>
@@ -17,7 +17,7 @@
                             </div>
                             <a href="mailto:szymkiewiczmateusz1@gmail.com" class="text-gray-600 text-md ml-3">
                                 <small class="block">Mail</small>
-                                <strong class="text-violet-600">szymkiewiczmateusz1@gmail.com</strong>
+                                <strong class="text-violet-600 text-xs sm:text-base">szymkiewiczmateusz1@gmail.com</strong>
                             </a>
                         </li>
                     </ul>
@@ -46,7 +46,7 @@
                     </ul>
                 </div>
             </div>
-            <form class="ml-auo space-y-4">
+            <form class="ml-auto space-y-4">
                 <input type='text' placeholder='Imię'
                     class="w-full rounded-md py-3 px-4 bg-gray-100 text-sm outline-[#007bff]" />
                 <input type='email' placeholder='Email'
@@ -56,7 +56,7 @@
                 <textarea placeholder='Wiadomość' rows="6"
                     class="w-full rounded-md px-4 bg-gray-100 text-sm pt-3 outline-[#007bff]"></textarea>
                 <button type='button'
-                    class="text-white bg-violet-400 hover:bg-blue-600 font-semibold rounded-md text-sm px-4 py-3 w-full">Wyślij</button>
+                    class="text-white bg-violet-400 hover:bg-violet-500 font-semibold rounded-md text-sm px-4 py-3 w-full">Wyślij</button>
             </form>
         </div>
 </template>

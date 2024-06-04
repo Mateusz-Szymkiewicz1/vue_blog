@@ -1,6 +1,6 @@
 <script setup>
   import { ref } from 'vue'
-  const props = defineProps(['url'])
+  const props = defineProps(['url', 'theme'])
   const menu = ref(false)
   const toggleMenu = () => {
       if(menu.value){
@@ -12,6 +12,7 @@
 </script>
 
 <template>
+  <div>
    <div class="flex items-center justify-between p-6 lg:px-8">
       <div class="flex md:flex-1 -m-1.5 p-1.5">
         <router-link to="/"><img class="h-12 w-auto" src="../assets/logo.png"></router-link>
@@ -29,6 +30,8 @@
         <router-link to="/kontakt" :class="url == 'kontakt' ? 'font-bold underline decoration-violet-400' : null">Kontakt</router-link>
       </div>
       <div class="hidden md:flex md:flex-1 md:justify-end">
+        <i @click="$emit('themeSwitch')" class="fa dark:text-orange-200 text-amber-400 mr-3 text-2xl -mt-[2px] cursor-pointer" :class="theme == 'light' ? 'fa-sun' : 'fa-moon'"></i>
+        <span class="pr-3">|</span>
         <router-link to="/logowanie" class="text-md font-semibold leading-6 text-gray-900">Zaloguj <span aria-hidden="true">&rarr;</span></router-link>
       </div>
     </div>
@@ -45,15 +48,19 @@
         <div class="mt-12 flow-root">
           <div class="-my-6 divide-y divide-gray-600/10">
             <div class="space-y-2 py-6">
-              <router-link to="/" class="-mx-3 block rounded-lg px-3 py-2 text-lg font-semibold leading-7 text-gray-900 hover:bg-gray-50" :class="url == 'home' ? 'bg-violet-100 hover:bg-violet-200' : null">Strona główna</router-link>
-              <router-link to="/about" class="-mx-3 block rounded-lg px-3 py-2 text-lg font-semibold leading-7 text-gray-900 hover:bg-gray-50" :class="url == 'about' ? 'bg-violet-100 hover:bg-violet-200' : null">O mnie</router-link>
-              <router-link to="/kontakt" class="-mx-3 block rounded-lg px-3 py-2 text-lg font-semibold leading-7 text-gray-900 hover:bg-gray-50" :class="url == 'kontakt' ? 'bg-violet-100 hover:bg-violet-200' : null">Kontakt</router-link>
+              <router-link to="/" @click="toggleMenu" class="-mx-3 block rounded-lg px-3 py-2 text-lg font-semibold leading-7 text-gray-900 hover:bg-gray-50" :class="url == 'home' ? 'bg-violet-100 hover:bg-violet-200' : null">Strona główna</router-link>
+              <router-link to="/about" @click="toggleMenu" class="-mx-3 block rounded-lg px-3 py-2 text-lg font-semibold leading-7 text-gray-900 hover:bg-gray-50" :class="url == 'about' ? 'bg-violet-100 hover:bg-violet-200' : null">O mnie</router-link>
+              <router-link to="/kontakt" @click="toggleMenu" class="-mx-3 block rounded-lg px-3 py-2 text-lg font-semibold leading-7 text-gray-900 hover:bg-gray-50" :class="url == 'kontakt' ? 'bg-violet-100 hover:bg-violet-200' : null">Kontakt</router-link>
             </div>
             <div class="py-2">
-              <router-link to="/logowanie" class="-mx-3 block rounded-lg px-3 py-2.5 text-lg font-semibold leading-7 text-gray-900 hover:bg-gray-50">Zaloguj się</router-link>
+              <span @click="$emit('themeSwitch')" class="cursor-pointer -mx-3 block rounded-lg px-3 py-2.5 text-lg font-semibold leading-7 text-gray-900 hover:bg-gray-50"><i class="fa text-amber-400 text-2xl mr-3 -mt-[2px] block float-left" :class="theme == 'light' ? 'fa-sun' : 'fa-moon'"></i> Motyw</span>
+            </div>
+            <div class="py-2">
+              <router-link @click="toggleMenu" to="/logowanie" class="-mx-3 block rounded-lg px-3 py-2.5 text-lg font-semibold leading-7 text-gray-900 hover:bg-gray-50">Zaloguj się</router-link>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 </template>

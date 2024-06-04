@@ -18,6 +18,11 @@ const router = createRouter({
       name: 'kontakt',
       component: () => import('../views/KontaktView.vue')
     },
+    {
+      path: '/logowanie',
+      name: 'logowanie',
+      component: () => import('../views/LoginView.vue')
+    },
     { 
       path: '/post/:id',
       name: 'post',

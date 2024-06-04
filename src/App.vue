@@ -3,27 +3,36 @@
   import { ref } from 'vue'
   import Nav from './components/Nav.vue'
   import Footer from './components/Footer.vue'
+  import CookieAlert from './components/CookieAlert.vue'
   const route = useRoute()
   const theme = ref("light")
+  const show_cookie_alert = ref(false)
   const toggleTheme = () => {
       if(theme.value == "light"){
         theme.value = "dark"
       }else{
         theme.value = "light"
       }
+      if(localStorage.getItem("vue_blog_cookies")){
+        localStorage.setItem("vue_blog_theme", theme.value);
+      }
+  }
+  if(localStorage.getItem("vue_blog_theme") && localStorage.getItem("vue_blog_theme") == "dark"){
+    theme.value = "dark"
   }
 </script>
 
 <template>
-  <div :class="theme">
+  <div id="container" :class="theme" class="dark:bg-neutral-950">
     <Nav :url="route.name" :theme="theme" @themeSwitch="toggleTheme"></Nav>
     <RouterView />
     <Footer></Footer>
+    <CookieAlert></CookieAlert>
   </div>
 </template>
 
 <style>
-  #app {
+  #container {
     min-height: 100vh;
     display: flex;
     flex-direction: column;

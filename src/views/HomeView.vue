@@ -53,23 +53,23 @@
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                 </svg>
             </div>
-            <input type="search" v-model="search" class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-violet-100 focus:ring-blue-500 focus:border-blue-500" placeholder="Search..."/>
+            <input type="search" v-model="search" class="block w-full p-2 ps-10 text-sm dark:text-slate-200 text-gray-900 border dark:border-indigo-950 border-gray-300 rounded-lg dark:bg-indigo-950 bg-violet-100" placeholder="Search..."/>
         </div>
-        <Multiselect class="md:mt-16 mt-4 max-w-72 !p-0 !text-sm !text-gray-400 !h-[38px] !bg-violet-100 rounded-lg border border-gray-300" :max="5" :limit="10" mode="tags" placeholder="Tags" v-model="selected_tags" :options="tags">
+        <Multiselect class="md:mt-16 mt-4 max-w-72 !p-0 !text-sm !text-gray-400 !h-[38px] dark:bg-indigo-950 bg-violet-100 rounded-lg border dark:border-indigo-950 border-gray-300" :max="5" :limit="10" mode="tags" placeholder="Tags" v-model="selected_tags" :options="tags">
        <template v-slot:option="{ option }">
-         <span class="p-1 w-full px-2 font-normal bg-violet-50 text-gray-700 hover:bg-violet-100">{{ option.value }}</span>
+         <span class="p-1 w-full px-2 font-normal dark:bg-indigo-950 bg-violet-50 dark:text-slate-200 text-gray-700 hover:bg-violet-100 dark:hover:bg-indigo-900">{{ option.value }}</span>
        </template>
     </Multiselect>
     </div>
-        <div class="container my-5 flex flex-wrap p-6 pt-0 lg:px-8 gap-6 min-h-96">
+        <div class="container my-5 mb-16 flex flex-wrap p-6 pt-0 lg:px-8 gap-6 min-h-96">
             <router-link v-for="wpis in wpisy" :to="'/post/'+wpis.id">
-                <div class="wpis md:flex md:h-64 py-2 px-5 bg-violet-200 cursor-pointer hover:bg-violet-300 transition-all  duration-300 hover:translate-y-[-2px]">
+                <div class="wpis md:flex md:h-64 py-2 px-5 dark:bg-indigo-950 bg-violet-200 cursor-pointer hover:bg-violet-300 dark:hover:bg-indigo-900 transition-all  duration-300 hover:translate-y-[-2px]">
                     <div class="max-w-[400px]">
-                        <h3 class="text-2xl text-slate-800 font-bold mt-3">{{ wpis.tytul }}<span class="text-lg font-normal text-slate-600 ml-2 whitespace-nowrap">{{ wpis.data }}</span></h3>
+                        <h3 class="text-2xl dark:text-slate-200 text-slate-800 font-bold mt-3">{{ wpis.tytul }}<span class="text-lg font-normal dark:text-slate-300 text-slate-600 ml-2 whitespace-nowrap">{{ wpis.data }}</span></h3>
                         <p class="mt-5">
-                            <span v-for="tag in wpis.tagi" class="rounded-md bg-purple-50 px-2 py-1 text-sm text-purple-700 ring-1 ring-inset ring-purple-700/10 mr-2">{{ tag }}</span>
+                            <span v-for="tag in wpis.tagi" class="rounded-md dark:bg-indigo-700 bg-purple-50 px-2 py-1 text-sm dark:text-indigo-200 text-purple-700 ring-1 ring-inset ring-purple-700/10 mr-2">{{ tag }}</span>
                         </p>
-                        <p class="my-2 mt-4 text-slate-600">{{ wpis.tresc.slice(0, 200)+"..." }}</p>
+                        <p class="my-2 mt-4 dark:text-slate-300 text-slate-600">{{ wpis.tresc.slice(0, 200)+"..." }}</p>
                     </div>
                     <img v-if="wpis.img" class="md:max-w-72 max-w-54 md:ml-6 my-4 border-violet-300 border-2" :src="'../src/assets/photos/'+wpis.img" onerror="this.onerror=null; this.src='../src/assets/placeholder.png'">
                 </div>
@@ -78,8 +78,12 @@
     </div>
 </template>
 
-<style scoped>
+<style>
     .wpis:hover img{
         border-color: #a78bfa;
+    }
+    .dark .multiselect-dropdown{
+        background: #2f2c5c;
+        border: 1px solid #3f3d6d;
     }
 </style>

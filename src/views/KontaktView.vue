@@ -1,13 +1,13 @@
 <template>
   <div class="grid p-5 my-20 mb-32 md:grid-cols-2 items-center gap-16 mx-auto max-w-4xl">
             <div>
-                <h1 class="text-4xl font-semibold">Kontakt</h1>
+                <h1 class="text-4xl dark:text-slate-200 font-semibold">Kontakt</h1>
                 <p class="text-md text-gray-400 mt-3">Pytania? Propozycje? Skontaktuj się ze mną i podziel się swoimi myślami!</p>
                 <div class="mt-12">
-                    <h2 class="text-xl font-semibold">Email</h2>
+                    <h2 class="text-xl dark:text-slate-200 font-semibold">Email</h2>
                     <ul class="mt-3">
                         <li class="flex items-center">
-                            <div class="bg-[#e6e6e6cf] h-12 w-12 rounded-full flex items-center justify-center shrink-0">
+                            <div class="bg-gray-200 dark:bg-stone-900 h-12 w-12 rounded-full flex items-center justify-center shrink-0">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill='#a855f7'
                                     viewBox="0 0 479.058 479.058">
                                     <path
@@ -15,7 +15,7 @@
                                         data-original="#000000" />
                                 </svg>
                             </div>
-                            <a href="mailto:szymkiewiczmateusz1@gmail.com" class="text-gray-600 text-md ml-3">
+                            <a href="mailto:szymkiewiczmateusz1@gmail.com" class="text-gray-600 dark:text-slate-200 text-md ml-3">
                                 <small class="block">Mail</small>
                                 <strong class="text-violet-600 text-xs sm:text-base">szymkiewiczmateusz1@gmail.com</strong>
                             </a>
@@ -23,9 +23,9 @@
                     </ul>
                 </div>
                 <div class="mt-12">
-                    <h2 class="text-xl font-semibold">Linki</h2>
+                    <h2 class="text-xl font-semibold dark:text-slate-200">Linki</h2>
                     <ul class="flex mt-3 space-x-4">
-                        <li class="bg-[#e6e6e6cf] h-10 w-10 rounded-full flex items-center justify-center shrink-0">
+                        <li class="bg-gray-200 dark:bg-stone-900 h-10 w-10 rounded-full flex items-center justify-center shrink-0">
                             <a href="https://github.com/Mateusz-Szymkiewicz1" target="_blank">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="36px" height="36px" fill='#a855f7'
                                     viewBox="-4 -4.5 24 24">
@@ -33,7 +33,7 @@
                                 </svg>
                             </a>
                         </li>
-                        <li class="bg-[#e6e6e6cf] h-10 w-10 rounded-full flex items-center justify-center shrink-0">
+                        <li class="bg-gray-200 dark:bg-stone-900 h-10 w-10 rounded-full flex items-center justify-center shrink-0">
                             <a href="#">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill='#a855f7'
                                     viewBox="2 0 511 512">
@@ -48,15 +48,15 @@
             </div>
             <form class="ml-auto space-y-4">
                 <input type='text' placeholder='Imię'
-                    class="w-full rounded-md py-3 px-4 bg-gray-100 text-sm outline-[#007bff]" />
+                    class="w-full rounded-md py-3 px-4 bg-gray-100 dark:text-slate-200 dark:bg-neutral-700 text-sm outline-[#007bff]" />
                 <input type='email' placeholder='Email'
-                    class="w-full rounded-md py-3 px-4 bg-gray-100 text-sm outline-[#007bff]" />
+                    class="w-full rounded-md py-3 px-4 bg-gray-100 text-sm outline-[#007bff] dark:text-slate-200 dark:bg-neutral-700" />
                 <input type='text' placeholder='Tytuł'
-                    class="w-full rounded-md py-3 px-4 bg-gray-100 text-sm outline-[#007bff]" />
+                    class="w-full rounded-md py-3 px-4 bg-gray-100 text-sm outline-[#007bff] dark:text-slate-200 dark:bg-neutral-700" />
                 <textarea placeholder='Wiadomość' rows="6"
-                    class="w-full rounded-md px-4 bg-gray-100 text-sm pt-3 outline-[#007bff]"></textarea>
+                    class="w-full rounded-md px-4 bg-gray-100 text-sm pt-3 outline-[#007bff] dark:text-slate-200 dark:bg-neutral-700"></textarea>
                 <button type='button'
-                    class="text-white bg-violet-400 hover:bg-violet-500 font-semibold rounded-md text-sm px-4 py-3 w-full">Wyślij</button>
+                    class="text-white bg-violet-400 hover:bg-violet-500 font-semibold rounded-md text-sm px-4 py-3 w-full dark:bg-indigo-950 dark:hover:bg-indigo-900">Wyślij</button>
             </form>
         </div>
 </template>

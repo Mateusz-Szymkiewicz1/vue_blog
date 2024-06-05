@@ -38,11 +38,11 @@
 </script>
 
 <template>
-    <main v-if="error" class="grid min-h-[70vh] place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
+    <main v-if="error" class="grid min-h-[70vh] place-items-center px-6 py-24 sm:py-32 lg:px-8">
             <div class="text-center">
             <p class="text-6xl font-semibold text-violet-600">500</p>
-            <h1 class="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">Błąd serwera</h1>
-            <p class="mt-6 leading-7 text-gray-600">Przepraszamy, nie uzyskaliśmy połączenia z serwerem.</p>
+            <h1 class="mt-4 text-3xl font-bold dark:text-slate-200 tracking-tight text-gray-900 sm:text-5xl">Błąd serwera</h1>
+            <p class="mt-6 leading-7 dark:text-slate-300 text-gray-600">Przepraszamy, nie uzyskaliśmy połączenia z serwerem.</p>
             </div>
         </main>
     <div v-else>

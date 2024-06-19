@@ -1,8 +1,25 @@
 const express = require('express')
+const session = require('express-session')
 const mysql = require('mysql')
 const cors = require('cors')
 const bcrypt = require('bcryptjs')
-const app = express().use(express.json()).use(cors())
+const app = express().use(express.json())
+
+app.use(cors({
+    origin: "http://localhost:5173",
+    methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
+    credentials: true,
+  })
+);
+
+app.use(session({
+  secret: "sesja",
+  saveUninitialized: false,
+  resave: false,
+  cookie: { 
+    maxAge: 1000*60*15,
+  }
+}))
 
 const connection = mysql.createConnection({
   host: 'localhost',
@@ -38,10 +55,14 @@ app.get('/post/:id', (req,res) => {
 })
 
 app.post('/logowanie', (req,res) => {
+  if(req.session.user){
+    return res.json(req.session.user)
+  }
   connection.query(`SELECT * FROM uzytkownicy WHERE login = '${req.body.login}'`, (err, rows, fields) => {
     if(rows && rows.length == 1){
       if(bcrypt.compareSync(req.body.haslo, rows[0].haslo)){
-        res.send({status:1})
+        req.session.user = rows[0].login
+        res.send({status: 200})
       }else{
         res.send({ status: 0, text: "Niepoprawne dane logowania!"})
       }

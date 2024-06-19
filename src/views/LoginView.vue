@@ -1,10 +1,13 @@
 <script setup>
   import { ref } from 'vue'
+  import { useRouter } from 'vue-router'
+  const router = useRouter()
   const login = ref("")
   const haslo = ref("")
   const error = ref("")
   const zaloguj = () => {
     fetch("http://localhost:3000/logowanie", {
+      credentials: 'include',
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -16,9 +19,23 @@
     }).then(res => res.json()).then(res => {
       if(res.status == 0){
         error.value = res.text
+      }else{
+        router.push('/')
       }
     })
   }
+
+  fetch("http://localhost:3000/logowanie", {
+        credentials: 'include',
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      }).then(res => res.json()).then(res => {
+        if(!res.text){
+          router.replace("/")
+        }
+  })
 </script>
 
 <template>

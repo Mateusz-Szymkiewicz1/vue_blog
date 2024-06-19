@@ -22,6 +22,7 @@
                         }
                     })
                 }
+                el.tresc = el.tresc.replace(/(<([^>]+)>)/ig, '')
                 wpisy_backup.value.push(el)
             })
         }

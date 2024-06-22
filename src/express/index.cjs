@@ -3,6 +3,7 @@ const session = require('express-session')
 const mysql = require('mysql')
 const cors = require('cors')
 const bcrypt = require('bcryptjs')
+MySQLStore = require('connect-mysql')(session)
 const app = express().use(express.json())
 
 app.use(cors({
@@ -17,8 +18,16 @@ app.use(session({
   saveUninitialized: false,
   resave: false,
   cookie: { 
-    maxAge: 1000*60*15,
-  }
+    maxAge: 1000*60*60*48,
+  },
+  store: new MySQLStore({
+    config: {
+      user: 'root', 
+      password: '',
+      database: 'vue_blog',
+    },
+    cleanup: true
+  }) 
 }))
 
 const connection = mysql.createConnection({

@@ -23,6 +23,11 @@ const router = createRouter({
       name: 'logowanie',
       component: () => import('../views/LoginView.vue')
     },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: () => import('../views/DashboardView.vue')
+    },
     { 
       path: '/post/:id',
       name: 'post',

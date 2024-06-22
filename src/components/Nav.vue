@@ -48,7 +48,7 @@
         <i @click="$emit('themeSwitch')" class="fa dark:text-orange-200 text-amber-400 mr-3 text-2xl -mt-[2px] cursor-pointer" :class="theme == 'light' ? 'fa-sun' : 'fa-moon'"></i>
         <span class="pr-3">|</span>
         <router-link v-if="!user" to="/logowanie" class="text-md font-semibold leading-6">Zaloguj <span aria-hidden="true">&rarr;</span></router-link>
-        <router-link v-if="user" to="/admin" class="text-md font-semibold leading-6">{{ user }} <span aria-hidden="true">&rarr;</span></router-link>
+        <router-link v-if="user" to="/dashboard" class="text-md font-semibold leading-6">{{ user }} <span aria-hidden="true">&rarr;</span></router-link>
       </div>
     </div>
     <div v-show="menu" class="md:hidden text-gray-900 dark:text-slate-200">
@@ -73,7 +73,7 @@
             </div>
             <div class="py-2">
               <router-link v-if="!user" @click="toggleMenu" to="/logowanie" class="-mx-3 block rounded-lg px-3 py-2.5 text-lg font-semibold leading-7 hover:bg-gray-50 dark:hover:bg-neutral-800">Zaloguj się</router-link>
-              <router-link v-if="user" @click="toggleMenu" to="/admin" class="-mx-3 block rounded-lg px-3 py-2.5 text-lg font-semibold leading-7 hover:bg-gray-50 dark:hover:bg-neutral-800"><i class="fa-solid text-violet-500 pr-3 fa-table-columns"></i>{{ user }}</router-link>
+              <router-link v-if="user" @click="toggleMenu" to="/dashboard" class="-mx-3 block rounded-lg px-3 py-2.5 text-lg font-semibold leading-7 hover:bg-gray-50 dark:hover:bg-neutral-800"><i class="fa-solid text-violet-500 pr-3 fa-table-columns"></i>{{ user }}</router-link>
             </div>
           </div>
         </div>

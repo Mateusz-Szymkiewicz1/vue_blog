@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Cze 02, 2024 at 10:03 AM
+-- Generation Time: Cze 24, 2024 at 10:21 PM
 -- Wersja serwera: 10.4.32-MariaDB
 -- Wersja PHP: 8.2.12
 
@@ -50,6 +50,25 @@ INSERT INTO `posty` (`id`, `tytul`, `tresc`, `data`, `tagi`, `img`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Struktura tabeli dla tabeli `sessions`
+--
+
+CREATE TABLE `sessions` (
+  `sid` varchar(255) NOT NULL,
+  `session` text NOT NULL,
+  `expires` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `sessions`
+--
+
+INSERT INTO `sessions` (`sid`, `session`, `expires`) VALUES
+('YdS0leam22V618YOmiVR3NPPc7UY4jh2', '{\"cookie\":{\"originalMaxAge\":172800000,\"expires\":\"2024-06-26T20:20:41.121Z\",\"httpOnly\":true,\"path\":\"/\"},\"user\":\"admin\"}', 1719433241);
+
+-- --------------------------------------------------------
+
+--
 -- Struktura tabeli dla tabeli `uzytkownicy`
 --
 
@@ -60,6 +79,13 @@ CREATE TABLE `uzytkownicy` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `uzytkownicy`
+--
+
+INSERT INTO `uzytkownicy` (`id`, `login`, `haslo`) VALUES
+(1, 'admin', '$2a$10$RK5IKilAXHJ15SXdRKeA1Od1SqxbtxWKlswEcI3NEBO2vpYxf30mS');
+
+--
 -- Indeksy dla zrzutów tabel
 --
 
@@ -68,6 +94,12 @@ CREATE TABLE `uzytkownicy` (
 --
 ALTER TABLE `posty`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indeksy dla tabeli `sessions`
+--
+ALTER TABLE `sessions`
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indeksy dla tabeli `uzytkownicy`
@@ -89,7 +121,7 @@ ALTER TABLE `posty`
 -- AUTO_INCREMENT for table `uzytkownicy`
 --
 ALTER TABLE `uzytkownicy`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -25,7 +25,7 @@
 <template>
   <div id="container" :class="theme" class="dark:bg-neutral-950">
     <Nav :url="route.name" :theme="theme" @themeSwitch="toggleTheme"></Nav>
-    <RouterView />
+    <RouterView/>
     <Footer></Footer>
     <CookieAlert></CookieAlert>
   </div>

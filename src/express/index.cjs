@@ -81,8 +81,9 @@ app.post('/logowanie', (req,res) => {
   })
 })
 
-app.get('/wyloguj', (req,res) => {
+app.post('/wyloguj', (req,res) => {
   req.session.destroy()
+  res.json("done")
 })
 
 app.listen(3000)

@@ -1,6 +1,8 @@
 <script setup>
   import {ref, onUpdated} from 'vue'
   import { useRouter } from 'vue-router'
+  import DashboardBlog from '../components/DashboardBlog.vue'
+  import DashboardKonto from '../components/DashboardKonto.vue'
   const router = useRouter()
   const current_page = ref("blog")
   const user = ref("")
@@ -27,6 +29,8 @@
         <span @click="current_page = 'blog'" class="h-full cursor-pointer flex items-center px-3" :class="current_page == 'blog' ? 'text-violet-700' : null"><i class="fa fa-book mr-2"></i>Blog</span>
         <span @click="current_page = 'konto'" class="h-full cursor-pointer flex items-center px-3" :class="current_page == 'konto' ? 'text-violet-700' : null"><i class="fa fa-user mr-2"></i>Konto</span>
       </div>
+      <DashboardBlog v-if="current_page == 'blog'"></DashboardBlog>
+      <DashboardKonto v-if="current_page == 'konto'"></DashboardKonto>
     </div>
   </div>
 </template>

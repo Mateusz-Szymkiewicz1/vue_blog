@@ -81,9 +81,25 @@ app.post('/logowanie', (req,res) => {
   })
 })
 
+app.get('/user/:login', (req,res) => {
+  connection.query(`SELECT id FROM uzytkownicy WHERE login = '${req.params.login}'`, (err, rows, fields) => {
+    if(rows && rows.length > 0){
+      res.send({status: 1})
+    }else{
+      res.send({status: 0})
+    }
+  })
+})
+
 app.post('/wyloguj', (req,res) => {
   req.session.destroy()
   res.json("done")
+})
+
+app.post('/zmianaloginu', (req,res) => {
+    connection.query(`UPDATE uzytkownicy SET login = '${req.body.nowy_login}' WHERE login = '${req.body.stary_login}'`, (err, rows, fields) => {
+      res.json(`done`)
+    })
 })
 
 app.listen(3000)

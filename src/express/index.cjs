@@ -102,4 +102,17 @@ app.post('/zmianaloginu', (req,res) => {
     })
 })
 
+app.post('/sprawdzhaslo', (req,res) => {
+  connection.query(`SELECT haslo FROM uzytkownicy WHERE login = '${req.body.login}'`, (err, rows, fields) => {
+    res.json(bcrypt.compareSync(req.body.haslo, rows[0].haslo))
+  })
+})
+
+app.post('/zmianahasla', (req,res) => {
+  const new_pass = bcrypt.hashSync(req.body.nowe_haslo, 10)
+  connection.query(`UPDATE uzytkownicy SET haslo = '${new_pass}' WHERE login = '${req.body.login}'`, (err, rows, fields) => {
+    res.json(`done`)
+  })
+})
+
 app.listen(3000)

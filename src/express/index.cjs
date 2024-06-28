@@ -3,6 +3,7 @@ const session = require('express-session')
 const mysql = require('mysql')
 const cors = require('cors')
 const bcrypt = require('bcryptjs')
+const { rewriteDefault } = require('vue/compiler-sfc')
 MySQLStore = require('connect-mysql')(session)
 const app = express().use(express.json())
 
@@ -97,20 +98,31 @@ app.post('/wyloguj', (req,res) => {
 })
 
 app.post('/zmianaloginu', (req,res) => {
+  console.log(req.session)
+    if(!req.session.user) return
     connection.query(`UPDATE uzytkownicy SET login = '${req.body.nowy_login}' WHERE login = '${req.body.stary_login}'`, (err, rows, fields) => {
       res.json(`done`)
     })
 })
 
 app.post('/sprawdzhaslo', (req,res) => {
+  if(!req.session.user) return
   connection.query(`SELECT haslo FROM uzytkownicy WHERE login = '${req.body.login}'`, (err, rows, fields) => {
     res.json(bcrypt.compareSync(req.body.haslo, rows[0].haslo))
   })
 })
 
 app.post('/zmianahasla', (req,res) => {
+  if(!req.session.user) return
   const new_pass = bcrypt.hashSync(req.body.nowe_haslo, 10)
   connection.query(`UPDATE uzytkownicy SET haslo = '${new_pass}' WHERE login = '${req.body.login}'`, (err, rows, fields) => {
+    res.json(`done`)
+  })
+})
+
+app.post('/usunkonto', (req,res) => {
+  if(!req.session.user) return
+  connection.query(`DELETE FROM uzytkownicy WHERE login = '${req.body.login}'`, (err, rows, fields) => {
     res.json(`done`)
   })
 })

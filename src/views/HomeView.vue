@@ -7,6 +7,8 @@
     const search = ref("")
     const tags = ref([])
     const selected_tags = ref([])
+    const sort = ref("najnowsze")
+    const post_limit = ref(20)
 
     fetch('http://localhost:3000/posty').then(res => res.json()).then(res => {
         if(res.status == 0){
@@ -35,6 +37,29 @@
         selected_tags.value.forEach(tag => {
             wpisy.value = wpisy.value.filter(el => el.tagi.includes(tag))
         })
+        if(sort.value == "najnowsze"){
+            wpisy.value = wpisy.value.sort(function(a,b){
+                return new Date(b.data) - new Date(a.data);
+            });
+        } 
+        if(sort.value == "najstarsze"){
+            wpisy.value = wpisy.value.sort(function(a,b){
+                return new Date(a.data) - new Date(b.data);
+            });
+        } 
+    })
+
+    watch(sort, () => {
+        if(sort.value == "najnowsze"){
+            wpisy.value = wpisy.value.sort(function(a,b){
+                return new Date(b.data) - new Date(a.data);
+            });
+        } 
+        if(sort.value == "najstarsze"){
+            wpisy.value = wpisy.value.sort(function(a,b){
+                return new Date(a.data) - new Date(b.data);
+            });
+        } 
     })
 </script>
 
@@ -61,9 +86,13 @@
          <span class="p-1 w-full px-2 font-normal dark:bg-indigo-950 bg-violet-50 dark:text-slate-200 text-gray-700 hover:bg-violet-100 dark:hover:bg-indigo-900">{{ option.value }}</span>
        </template>
     </Multiselect>
+    <select v-model="sort" class="rounded-md !h-[38px] text-sm md:mt-16 mt-4 px-3 bg-violet-100 dark:bg-indigo-950 text-sm text-gray-500 dark:text-gray-400">
+        <option value="najnowsze" default>Data dodania: Najnowsze</option>
+        <option value="najstarsze">Data dodania: Najstarsze</option>
+    </select>
     </div>
-        <div class="container my-5 mb-16 flex flex-wrap p-6 pt-0 lg:px-8 gap-6 min-h-96">
-            <router-link v-for="wpis in wpisy" :to="'/post/'+wpis.id">
+        <div class="container mt-5 flex flex-wrap p-6 pt-0 lg:px-8 gap-6">
+            <router-link v-for="wpis in wpisy.slice(0, post_limit)" :to="'/post/'+wpis.id">
                 <div class="wpis md:flex md:h-64 py-2 px-5 dark:bg-indigo-950 bg-violet-200 cursor-pointer hover:bg-violet-300 dark:hover:bg-indigo-900 transition-all  duration-300 hover:translate-y-[-2px]">
                     <div class="max-w-[400px]">
                         <h3 class="text-2xl dark:text-slate-200 text-slate-800 font-bold mt-3">{{ wpis.tytul }}<span class="text-lg font-normal dark:text-slate-300 text-slate-600 ml-2 whitespace-nowrap">{{ wpis.data }}</span></h3>
@@ -76,6 +105,10 @@
                 </div>
             </router-link>
         </div>
+        <div v-if="post_limit >= wpisy.length">
+            <br/><br/><br/><br/>
+        </div>
+        <div v-if="post_limit < wpisy.length" @click="post_limit += 20" class="mx-6 lg:mx-8 rounded-md mb-20 cursor-pointer text-white dark:text-slate-200 bg-violet-300 float-left p-3 px-8 dark:bg-indigo-900">Więcej</div>
     </div>
 </template>
 
@@ -86,5 +119,8 @@
     .dark .multiselect-dropdown{
         background: #2f2c5c;
         border: 1px solid #3f3d6d;
+    }
+    select{
+        outline: none;
     }
 </style>

@@ -38,14 +38,8 @@ const connection = mysql.createConnection({
   database: 'vue_blog'
 })
 
-// app.post('/dodaj', (req,res) => {
-//     connection.query(`INSERT INTO filmy (id, gatunki_id, rezyserzy_id, tytul, rok, ocena) VALUES (NULL, '${req.body.gatunek}', '${req.body.rezyser}', '${req.body.tytul}', '${req.body.rok}', '${req.body.ocena}');`, (err, rows, fields) => {
-//       res.json(`Film ${req.body.tytul} dodany!`)
-//     })
-// })
-
 app.get('/posty', (req,res) => {
-    connection.query(`SELECT * FROM posty ORDER BY id DESC LIMIT 20`, (err, rows, fields) => {
+    connection.query(`SELECT * FROM posty ORDER BY data DESC`, (err, rows, fields) => {
       if(rows){
         res.send(rows)
       }else{

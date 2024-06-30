@@ -1,5 +1,5 @@
 <script setup>
-  import {ref, onUpdated} from 'vue'
+  import {ref} from 'vue'
   import { useRouter } from 'vue-router'
   import DashboardBlog from '../components/DashboardBlog.vue'
   import DashboardKonto from '../components/DashboardKonto.vue'

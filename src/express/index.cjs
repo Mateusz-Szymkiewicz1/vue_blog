@@ -121,4 +121,11 @@ app.post('/usunkonto', (req,res) => {
   })
 })
 
+app.post('/usunpost', (req,res) => {
+  if(!req.session.user) return
+  connection.query(`DELETE FROM posty WHERE id = '${req.body.id}'`, (err, rows, fields) => {
+    res.json(`done`)
+  })
+})
+
 app.listen(3000)

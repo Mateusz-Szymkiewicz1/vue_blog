@@ -1,6 +1,7 @@
 <script setup>
   import {ref, watch} from 'vue'
   import Multiselect from '@vueform/multiselect'
+  import { decision } from '../composables/Decision.vue'
   const wpisy = ref([])
   const wpisy_backup = ref([])
   const error = ref("")
@@ -60,6 +61,32 @@
             });
         } 
     })
+    const usun_post = async (id) => {
+      if (document.querySelector(".decision")) document.querySelector('.decision').remove()
+      const response = await decision().then(function () {
+          document.querySelector(".decision").remove()
+          return
+      }, function () {
+          document.querySelector(".decision").remove()
+          return "stop"
+      });
+      if(response) return
+      fetch("http://localhost:3000/usunpost", {
+        credentials: 'include',
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            id: id
+        })
+      }).then(res => res.json()).then(res => {
+        if(res == "done"){
+          wpisy_backup.value = wpisy_backup.value.filter((item) => item.id !== id);
+          wpisy.value = wpisy.value.filter((item) => item.id !== id);
+        }
+      })
+    }
 </script>
 
 <template>
@@ -73,6 +100,7 @@
     </main>
     <div v-else>
       <div class="flex md:gap-4 ml-3 -mt-8 flex-col md:flex-row">
+        <router-link to="/post/new"><div class="rounded-md !h-[38px] w-fit text-sm md:mt-16 mt-4 px-3 bg-violet-300 dark:bg-indigo-900 text-sm text-gray-800 dark:text-gray-400 pt-2 cursor-pointer"><i class="fa fa-circle-plus mr-2"></i>Nowy</div></router-link>
         <div class="relative w-72 mt-16">
             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                 <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
@@ -81,12 +109,12 @@
             </div>
             <input type="search" v-model="search" class="block w-full p-2 ps-10 text-sm dark:text-slate-200 text-gray-900 border dark:border-indigo-950 border-gray-300 rounded-lg dark:bg-indigo-950 bg-violet-200" placeholder="Search..."/>
         </div>
-        <Multiselect class="md:mt-16 mt-4 max-w-72 !p-0 !text-sm !text-gray-400 !h-[38px] dark:bg-indigo-950 bg-violet-200 rounded-lg border dark:border-indigo-950 border-gray-300" :max="5" :limit="10" mode="tags" placeholder="Tags" v-model="selected_tags" :options="tags">
+        <Multiselect class="md:mt-16 mt-4 max-w-72 !p-0 !text-sm !text-gray-500 !h-[38px] dark:bg-indigo-950 bg-violet-200 rounded-lg border dark:border-indigo-950 border-gray-300" :max="5" :limit="10" mode="tags" placeholder="Tags" v-model="selected_tags" :options="tags">
        <template v-slot:option="{ option }">
-         <span class="p-1 w-full px-2 font-normal dark:bg-indigo-950 bg-violet-50 dark:text-slate-200 text-gray-700 hover:bg-violet-100 dark:hover:bg-indigo-900">{{ option.value }}</span>
+         <span class="p-1 w-full px-2 font-normal dark:bg-indigo-950 bg-violet-50 dark:text-slate-200 text-gray-800 hover:bg-violet-100 dark:hover:bg-indigo-900">{{ option.value }}</span>
        </template>
     </Multiselect>
-    <select v-model="sort" class="rounded-md !h-[38px] text-sm md:mt-16 mt-4 px-3 bg-violet-200 dark:bg-indigo-950 text-sm text-gray-500 dark:text-gray-400">
+    <select v-model="sort" class="rounded-md !h-[38px] w-fit text-sm md:mt-16 mt-4 px-3 bg-violet-200 dark:bg-indigo-950 text-sm text-gray-500 dark:text-gray-400">
         <option value="najnowsze" default>Data dodania: Najnowsze</option>
         <option value="najstarsze">Data dodania: Najstarsze</option>
     </select>
@@ -94,7 +122,10 @@
       <table>
         <router-link v-for="wpis in wpisy.slice(0, post_limit)" :to="'/post/'+wpis.id">
           <tr class="bg-violet-200 dark:bg-indigo-950 dark:text-slate-200 m-3 block p-3">
-            <td class="text-xl font-semibold">{{ wpis.tytul }}</td>
+            <td class="text-xl font-semibold">{{ wpis.tytul }} 
+              <router-link :to="'/post/edit/'+wpis.id"><i class="fa fa-pencil text-sm ml-2 text-yellow-500"></i></router-link>
+              <i @click.prevent="usun_post(wpis.id)" class="fa fa-trash text-sm ml-3 text-red-600"></i>
+            </td>
             <img v-if="wpis.img" class="md:max-w-64 max-w-48 my-4 border-violet-300 border-2" :src="'../src/assets/photos/'+wpis.img" onerror="this.onerror=null; this.src='../src/assets/placeholder.png'">
             <td>{{ wpis.tresc.slice(0, 100)+"..." }}</td>
             <p class="my-3">

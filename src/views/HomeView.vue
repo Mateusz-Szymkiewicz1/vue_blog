@@ -86,7 +86,7 @@
          <span class="p-1 w-full px-2 font-normal dark:bg-indigo-950 bg-violet-50 dark:text-slate-200 text-gray-700 hover:bg-violet-100 dark:hover:bg-indigo-900">{{ option.value }}</span>
        </template>
     </Multiselect>
-    <select v-model="sort" class="rounded-md !h-[38px] text-sm md:mt-16 mt-4 px-3 bg-violet-100 dark:bg-indigo-950 text-sm text-gray-500 dark:text-gray-400">
+    <select v-model="sort" class="rounded-md !h-[38px] w-fit text-sm md:mt-16 mt-4 px-3 bg-violet-100 dark:bg-indigo-950 text-sm text-gray-500 dark:text-gray-400">
         <option value="najnowsze" default>Data dodania: Najnowsze</option>
         <option value="najstarsze">Data dodania: Najstarsze</option>
     </select>

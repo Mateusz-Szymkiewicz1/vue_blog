@@ -9,8 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@primevue/themes": "^4.0.0-rc.2",
     "@vueform/multiselect": "^2.6.7",
-    "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "connect-mysql": "^4.0.0",
     "cors": "^2.8.5",
@@ -19,6 +19,8 @@
     "mysql": "^2.18.1",
     "nodemon": "^3.1.0",
     "pinia": "^2.1.7",
+    "primevue": "^4.0.0-rc.2",
+    "quill": "^2.0.2",
     "vue": "^3.4.21",
     "vue-multiselect": "^3.0.0-beta.3",
     "vue-router": "^4.3.0"

@@ -86,4 +86,7 @@
     margin-bottom: 20px;
     max-width: 80vw;
   }
+  h1 span{
+    white-space:nowrap;
+  }
 </style>

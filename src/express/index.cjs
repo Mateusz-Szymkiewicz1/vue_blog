@@ -128,4 +128,9 @@ app.post('/usunpost', (req,res) => {
   })
 })
 
+app.post('/dodajpost', (req,res) => {
+  if(!req.session.user) return
+  console.log(req.body)
+})
+
 app.listen(3000)

@@ -4,6 +4,7 @@
   import Editor from 'primevue/editor';
   import FileUpload from 'primevue/fileupload';
   import Multiselect from '@vueform/multiselect'
+  import { decision } from '../composables/Decision.vue'
   const router = useRouter()
   const user = ref("")
   fetch("http://localhost:3000/logowanie", {
@@ -62,9 +63,34 @@
     }else{
       error.value = ""
       document.querySelector('body').style = 'overflow: hidden;'
-      console.log(tekst.value)
     }
     preview.value = !preview.value
+  }
+
+  const dodaj_post = async () => {
+    if(!tekst.value || !tytul.value){
+      error.value = "Wpisz tytuł/treść!"
+      return
+    }
+    if (document.querySelector(".decision")) document.querySelector('.decision').remove()
+    const response = await decision().then(function () {
+        document.querySelector(".decision").remove()
+        return
+    }, function () {
+        document.querySelector(".decision").remove()
+        return "stop"
+    });
+    if(response) return
+    const formData  = new FormData();
+    formData.append('tytul', tytul.value);
+    formData.append('tekst', tekst.value);
+    formData.append('tagi', selected_tags.value);
+    formData.append('img', thumbnail.value.files[0]);
+    fetch("http://localhost:3000/dodajpost", {
+      credentials: 'include',
+      method: "POST",
+      body: formData
+    }).then(router.push('/dashboard'))
   }
 
   const data = ref("")

@@ -126,7 +126,7 @@
               <router-link :to="'/post/edit/'+wpis.id"><i class="fa fa-pencil text-sm ml-2 text-yellow-500"></i></router-link>
               <i @click.prevent="usun_post(wpis.id)" class="fa fa-trash text-sm ml-3 text-red-600"></i>
             </td>
-            <img v-if="wpis.img" class="md:max-w-64 max-w-48 my-4 border-violet-300 border-2" :src="'../src/assets/photos/'+wpis.img" onerror="this.onerror=null; this.src='../src/assets/placeholder.png'">
+            <img v-if="wpis.img" class="md:max-w-64 max-w-48 my-4 border-violet-300 border-2" :src="'../photos/'+wpis.img" onerror="this.src='../src/assets/placeholder.png'">
             <td>{{ wpis.tresc.slice(0, 100)+"..." }}</td>
             <p class="my-3">
               <span v-for="tag in wpis.tagi" class="rounded-md dark:bg-indigo-700 bg-purple-50 px-2 py-1 text-sm dark:text-indigo-200 text-purple-700 ring-1 ring-inset ring-purple-700/10 mr-2">{{ tag }}</span>

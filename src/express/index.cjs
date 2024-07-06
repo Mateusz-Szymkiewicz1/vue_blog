@@ -3,7 +3,23 @@ const session = require('express-session')
 const mysql = require('mysql')
 const cors = require('cors')
 const bcrypt = require('bcryptjs')
+const multer = require("multer");
+var crypto = require ("crypto")
+var path = require ("path")
+var fs = require('fs');
 const { rewriteDefault } = require('vue/compiler-sfc')
+const { renderSlot } = require('vue')
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, '../../photos')
+  },
+  filename: function (req, file, cb) {
+    crypto.pseudoRandomBytes(16, function (err, raw) {
+      cb(null, raw.toString('hex') + Date.now() + path.extname(file.originalname));
+    });
+  }
+});
+const upload = multer({ storage: storage });
 MySQLStore = require('connect-mysql')(session)
 const app = express().use(express.json())
 
@@ -123,14 +139,27 @@ app.post('/usunkonto', (req,res) => {
 
 app.post('/usunpost', (req,res) => {
   if(!req.session.user) return
+  connection.query(`SELECT img FROM posty WHERE id = '${req.body.id}'`, (err, rows, fields) => {
+    if(rows[0] && rows[0].img){
+      fs.unlinkSync('../../photos/'+rows[0].img);
+    }
+  })
   connection.query(`DELETE FROM posty WHERE id = '${req.body.id}'`, (err, rows, fields) => {
     res.json(`done`)
   })
 })
 
-app.post('/dodajpost', (req,res) => {
+app.post("/dodajpost", upload.single("img"), dodajPost);
+
+function dodajPost(req, res) {
   if(!req.session.user) return
-  console.log(req.body)
-})
+  let filename = ""
+  if(req.file){
+    filename = req.file.filename
+  }
+  connection.query(`INSERT INTO posty(tytul, tresc, data, tagi, img) VALUES ('${req.body.tytul}','${req.body.tekst}',NOW(),'${req.body.tagi}','${filename}');`, (err, rows, fields) => {
+    res.json("done")
+  })
+}
 
 app.listen(3000)

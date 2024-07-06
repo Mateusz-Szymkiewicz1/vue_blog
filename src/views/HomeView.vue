@@ -101,7 +101,7 @@
                         </p>
                         <p class="my-2 mt-4 dark:text-slate-300 text-slate-600">{{ wpis.tresc.slice(0, 200)+"..." }}</p>
                     </div>
-                    <img v-if="wpis.img" class="md:max-w-72 max-w-54 md:ml-6 my-4 border-violet-300 border-2" :src="'../src/assets/photos/'+wpis.img" onerror="this.onerror=null; this.src='../src/assets/placeholder.png'">
+                    <img v-if="wpis.img" class="md:max-w-72 max-w-54 md:ml-6 my-4 border-violet-300 border-2" :src="'../photos/'+wpis.img" onerror="this.src='../src/assets/placeholder.png'">
                 </div>
             </router-link>
         </div>

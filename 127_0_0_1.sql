@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Cze 24, 2024 at 10:21 PM
+-- Generation Time: Lip 06, 2024 at 06:10 PM
 -- Wersja serwera: 10.4.32-MariaDB
 -- Wersja PHP: 8.2.12
 
@@ -20,7 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `vue_blog`
 --
-DROP DATABASE IF EXISTS `vue_blog`;
 CREATE DATABASE IF NOT EXISTS `vue_blog` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `vue_blog`;
 
@@ -34,7 +33,7 @@ CREATE TABLE `posty` (
   `id` int(11) NOT NULL,
   `tytul` text NOT NULL,
   `tresc` text NOT NULL,
-  `data` date NOT NULL,
+  `data` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `tagi` text NOT NULL,
   `img` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -44,8 +43,8 @@ CREATE TABLE `posty` (
 --
 
 INSERT INTO `posty` (`id`, `tytul`, `tresc`, `data`, `tagi`, `img`) VALUES
-(1, 'Moj pierwszy post', 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempora dolore eius vel, laboriosam doloremque cumque corporis consequuntur vero sit accusamus alias magni sint explicabo illum quo natus harum nobis quisquam, unde iure obcaecati eveniet autem molestiae. Consequuntur, cum qui. Nulla sint maxime, esse qui voluptate voluptas obcaecati nihil illo placeat.', '2024-06-25', '', ''),
-(2, 'Moj drugi post', 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempora dolore eius vel, laboriosam doloremque cumque corporis consequuntur vero sit accusamus alias magni sint explicabo illum quo natus harum nobis quisquam, unde iure obcaecati eveniet autem molestiae. Consequuntur, cum qui. Nulla sint maxime, esse qui voluptate voluptas obcaecati nihil illo placeat.', '2024-06-18', '[\"smieszne\"]', 'photo.png');
+(1, 'Moj pierwszy post', 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempora dolore eius vel, laboriosam doloremque cumque corporis consequuntur vero sit accusamus alias magni sint explicabo illum quo natus harum nobis quisquam, unde iure obcaecati eveniet autem molestiae. Consequuntur, cum qui. Nulla sint maxime, esse qui voluptate voluptas obcaecati nihil illo placeat.', '2024-06-24 22:00:00', '', ''),
+(2, 'Moj drugi post', 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempora dolore eius vel, laboriosam doloremque cumque corporis consequuntur vero sit accusamus alias magni sint explicabo illum quo natus harum nobis quisquam, unde iure obcaecati eveniet autem molestiae. Consequuntur, cum qui. Nulla sint maxime, esse qui voluptate voluptas obcaecati nihil illo placeat.', '2024-06-17 22:00:00', '[\"smieszne\"]', 'photo.png');
 
 -- --------------------------------------------------------
 
@@ -64,7 +63,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`sid`, `session`, `expires`) VALUES
-('YdS0leam22V618YOmiVR3NPPc7UY4jh2', '{\"cookie\":{\"originalMaxAge\":172800000,\"expires\":\"2024-06-26T20:20:41.121Z\",\"httpOnly\":true,\"path\":\"/\"},\"user\":\"admin\"}', 1719433241);
+('bhgCwbkDhDJ_PsHO08yrqoKgNp8poKoW', '{\"cookie\":{\"originalMaxAge\":172800000,\"expires\":\"2024-07-07T14:20:11.587Z\",\"httpOnly\":true,\"path\":\"/\"},\"user\":\"admin\"}', 1720362012);
 
 -- --------------------------------------------------------
 
@@ -83,7 +82,7 @@ CREATE TABLE `uzytkownicy` (
 --
 
 INSERT INTO `uzytkownicy` (`id`, `login`, `haslo`) VALUES
-(1, 'admin', '$2a$10$RK5IKilAXHJ15SXdRKeA1Od1SqxbtxWKlswEcI3NEBO2vpYxf30mS');
+(2, 'admin', '$2a$10$PxMSaNItQp06Bp21iKSozu/2j7zCjrKVEoLbA2RWxKcwyD.5kSFB.');
 
 --
 -- Indeksy dla zrzutów tabel
@@ -115,13 +114,13 @@ ALTER TABLE `uzytkownicy`
 -- AUTO_INCREMENT for table `posty`
 --
 ALTER TABLE `posty`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `uzytkownicy`
 --
 ALTER TABLE `uzytkownicy`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

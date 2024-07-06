@@ -2,7 +2,6 @@
   import { useRoute, useRouter } from 'vue-router'
   import { ref, onUpdated } from 'vue'
   import { decision } from '../composables/Decision.vue'
-
   const route = useRoute()
   const router = useRouter()
   const id = route.params.id
@@ -14,7 +13,9 @@
         }else{
             post.value = res[0]
             post.value.data = post.value.data.slice(0, 10)
-            post.value.tagi = JSON.parse(post.value.tagi)
+            if(post.value.tagi){
+              post.value.tagi = JSON.parse(post.value.tagi)
+            }
         }
   })
 
@@ -68,25 +69,45 @@
       <p class="mt-6 leading-7 text-gray-600 dark:text-slate-400">Przepraszamy, nie znaleźliśmy strony której szukasz.</p>
     </div>
   </main>
-  <div v-else class="p-9 pr-36 mt-5">
-      <h1 class="font-semibold dark:text-slate-200 text-4xl mt-6">
+  <div v-else class="post p-9 pr-36 mt-5">
+      <h1 class="font-semibold dark:text-slate-200 my-10 text-4xl">
         {{ post.tytul }}
         <span class="text-lg dark:text-slate-400 font-normal text-slate-600 ml-1">{{ post.data }}</span>
         <span v-for="tag in post.tagi" class="rounded-md dark:bg-indigo-700 bg-purple-50 px-2 py-1 text-sm dark:text-indigo-200 text-purple-700 ring-1 ring-inset ring-purple-700/10 ml-2">{{ tag }}</span>
         <router-link :to="'/post/edit/'+post.id"><span v-if="user" class="rounded-md cursor-pointer dark:bg-indigo-700 bg-purple-50 px-2 py-1 text-sm dark:text-indigo-200 text-purple-700 ring-1 ring-inset ring-purple-700/10 ml-2"><i class="fa fa-pencil text-sm mr-2"></i>Edytuj</span></router-link>
         <span v-if="user" @click="usun_post" class="rounded-md cursor-pointer dark:bg-indigo-700 bg-purple-50 px-2 py-1 text-sm dark:text-indigo-200 text-purple-700 ring-1 ring-inset ring-purple-700/10 ml-2"><i class="fa fa-trash text-sm mr-2"></i>Usuń</span>
       </h1>
+      <img v-if="post.img" :src="'../../photos/'+post.img" onerror="this.src='../src/assets/placeholder.png'">
       <p class="text-lg dark:text-slate-400 py-10" v-html="post.tresc"></p>
     </div>
 </template>
 
-<style scoped>
-  img{
+<style>
+  .post p img{
     margin-top: 20px;
     margin-bottom: 20px;
     max-width: 80vw;
   }
-  h1 span{
+  .post span{
     white-space:nowrap;
+  }
+  .post .ql-size-small{
+    @apply text-sm;
+  }
+  .post .ql-size-large{
+    @apply text-3xl;
+  }
+  .post .ql-size-huge{
+    @apply text-4xl;
+  }
+  .post ol{
+    list-style: decimal;
+    @apply ml-10;
+  }
+  .post p a{
+    @apply text-violet-600 underline;
+  }
+  .post blockquote{
+    @apply p-4 my-4 border-s-4 border-violet-600 bg-neutral-100 dark:bg-neutral-800
   }
 </style>

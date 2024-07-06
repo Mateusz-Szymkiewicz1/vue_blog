@@ -1,3 +1,41 @@
+<script setup>
+    import {ref} from 'vue'
+    import Toast from '../components/Toast.vue'
+    const imie = ref("")
+    const email = ref("")
+    const tytul = ref("")
+    const tresc = ref("")
+    const toast = ref({})
+    const wyslij = () => {
+        if(!/^[\p{L}\p{M} ]+$/u.test(imie.value)){
+            toast.value = {type: "error", msg: "Imię może składać się tylko z liter!"}
+            return
+        }
+        if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)){
+            toast.value = {type: "error", msg: "Błędny email!"}
+            return
+        }
+        fetch("http://localhost:3000/wyslijwiadomosc", {
+            credentials: 'include',
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                imie: imie.value,
+                email: email.value,
+                tytul: tytul.value,
+                tresc: tresc.value,
+            }),
+        }).then(res => res.json()).then(res => {
+           imie.value = ""
+           email.value = ""
+           tytul.value = ""
+           tresc.value = ""
+        })
+    }
+</script>
+
 <template>
     <div class="grid p-5 my-20 mb-32 md:grid-cols-2 items-center gap-16 mx-auto max-w-4xl">
         <div>
@@ -53,16 +91,18 @@
             </div>
         </div>
         <form class="ml-auto space-y-4">
-            <input type='text' maxlength="70" placeholder='Imię'
+            <input v-model="imie" type='text' maxlength="70" placeholder='Imię'
                 class="w-full rounded-md py-3 px-4 bg-gray-100 dark:text-slate-200 dark:bg-neutral-700 text-sm outline-[#007bff]" />
-            <input type='email' maxlength="100" placeholder='Email'
+            <input v-model="email" type='email' maxlength="100" placeholder='Email'
                 class="w-full rounded-md py-3 px-4 bg-gray-100 text-sm outline-[#007bff] dark:text-slate-200 dark:bg-neutral-700" />
-            <input type='text' maxlength="200" placeholder='Tytuł'
+            <input v-model="tytul" type='text' maxlength="200" placeholder='Tytuł'
                 class="w-full rounded-md py-3 px-4 bg-gray-100 text-sm outline-[#007bff] dark:text-slate-200 dark:bg-neutral-700" />
-            <textarea placeholder='Wiadomość' maxlength="10000" rows="6"
+            <textarea v-model="tresc" placeholder='Wiadomość' maxlength="10000" rows="6"
                 class="w-full rounded-md px-4 bg-gray-100 text-sm pt-3 outline-[#007bff] dark:text-slate-200 dark:bg-neutral-700"></textarea>
-            <button type='button'
+            <button @click="wyslij" type='button'
                 class="text-white bg-violet-400 hover:bg-violet-500 font-semibold rounded-md text-sm px-4 py-3 w-full dark:bg-indigo-950 dark:hover:bg-indigo-900">Wyślij</button>
         </form>
     </div>
+
+    <Toast :toast="toast" @closeToast="toast = {}"></Toast> 
 </template>

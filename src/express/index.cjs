@@ -65,7 +65,7 @@ app.get('/posty', (req,res) => {
 })
 
 app.get('/post/:id', (req,res) => {
-  connection.query(`SELECT * FROM posty WHERE id = ${req.params.id}`, (err, rows, fields) => {
+  connection.query(`SELECT * FROM posty WHERE id = ?`,[req.params.id], (err, rows, fields) => {
     if(rows && rows.length == 1){
       res.send(rows)
     }else{
@@ -78,7 +78,7 @@ app.post('/logowanie', (req,res) => {
   if(req.session.user){
     return res.json(req.session.user)
   }
-  connection.query(`SELECT * FROM uzytkownicy WHERE login = '${req.body.login}'`, (err, rows, fields) => {
+  connection.query(`SELECT * FROM uzytkownicy WHERE login = ?`,[req.body.login], (err, rows, fields) => {
     if(rows && rows.length == 1){
       if(bcrypt.compareSync(req.body.haslo, rows[0].haslo)){
         req.session.user = rows[0].login
@@ -93,7 +93,7 @@ app.post('/logowanie', (req,res) => {
 })
 
 app.get('/user/:login', (req,res) => {
-  connection.query(`SELECT id FROM uzytkownicy WHERE login = '${req.params.login}'`, (err, rows, fields) => {
+  connection.query(`SELECT id FROM uzytkownicy WHERE login = ?`,[req.params.login], (err, rows, fields) => {
     if(rows && rows.length > 0){
       res.send({status: 1})
     }else{
@@ -110,14 +110,14 @@ app.post('/wyloguj', (req,res) => {
 app.post('/zmianaloginu', (req,res) => {
   console.log(req.session)
     if(!req.session.user) return
-    connection.query(`UPDATE uzytkownicy SET login = '${req.body.nowy_login}' WHERE login = '${req.body.stary_login}'`, (err, rows, fields) => {
+    connection.query(`UPDATE uzytkownicy SET login = ? WHERE login = ?`,[req.body.nowy_login, req.body.stary_login], (err, rows, fields) => {
       res.json(`done`)
     })
 })
 
 app.post('/sprawdzhaslo', (req,res) => {
   if(!req.session.user) return
-  connection.query(`SELECT haslo FROM uzytkownicy WHERE login = '${req.body.login}'`, (err, rows, fields) => {
+  connection.query(`SELECT haslo FROM uzytkownicy WHERE login = ?`,[req.body.login], (err, rows, fields) => {
     res.json(bcrypt.compareSync(req.body.haslo, rows[0].haslo))
   })
 })
@@ -125,26 +125,33 @@ app.post('/sprawdzhaslo', (req,res) => {
 app.post('/zmianahasla', (req,res) => {
   if(!req.session.user) return
   const new_pass = bcrypt.hashSync(req.body.nowe_haslo, 10)
-  connection.query(`UPDATE uzytkownicy SET haslo = '${new_pass}' WHERE login = '${req.body.login}'`, (err, rows, fields) => {
+  connection.query(`UPDATE uzytkownicy SET haslo = ? WHERE login = ?`,[new_pass, req.body.login], (err, rows, fields) => {
     res.json(`done`)
   })
 })
 
 app.post('/usunkonto', (req,res) => {
   if(!req.session.user) return
-  connection.query(`DELETE FROM uzytkownicy WHERE login = '${req.body.login}'`, (err, rows, fields) => {
+  connection.query(`DELETE FROM uzytkownicy WHERE login = ?`,[req.body.login], (err, rows, fields) => {
     res.json(`done`)
   })
 })
 
+app.post('/wyslijwiadomosc', (req,res) => {
+  connection.query(`INSERT INTO wiadomosci(imie,email,tytul,tresc,data) VALUES (?,?,?,?,NOW());`,[req.body.imie,req.body.email,req.body.tytul,req.body.tresc], (err, rows, fields) => {
+    res.json("done")
+  })
+})
+
+
 app.post('/usunpost', (req,res) => {
   if(!req.session.user) return
-  connection.query(`SELECT img FROM posty WHERE id = '${req.body.id}'`, (err, rows, fields) => {
+  connection.query(`SELECT img FROM posty WHERE id = ?`,[req.body.id], (err, rows, fields) => {
     if(rows[0] && rows[0].img){
       fs.unlinkSync('../../photos/'+rows[0].img);
     }
   })
-  connection.query(`DELETE FROM posty WHERE id = '${req.body.id}'`, (err, rows, fields) => {
+  connection.query(`DELETE FROM posty WHERE id = ?`,[req.body.id], (err, rows, fields) => {
     res.json(`done`)
   })
 })
@@ -157,7 +164,7 @@ function dodajPost(req, res) {
   if(req.file){
     filename = req.file.filename
   }
-  connection.query(`INSERT INTO posty(tytul, tresc, data, tagi, img) VALUES ('${req.body.tytul}','${req.body.tekst}',NOW(),'${req.body.tagi}','${filename}');`, (err, rows, fields) => {
+  connection.query(`INSERT INTO posty(tytul, tresc, data, tagi, img) VALUES (?,?,NOW(),?,?);`,[req.body.tytul,req.body.tekst,req.body.tagi,filename], (err, rows, fields) => {
     res.json("done")
   })
 }

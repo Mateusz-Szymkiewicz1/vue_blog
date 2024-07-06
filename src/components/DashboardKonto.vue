@@ -2,6 +2,7 @@
 import {ref} from 'vue'
 import { useRouter } from 'vue-router'
 import { decision } from '../composables/Decision.vue'
+import Toast from '../components/Toast.vue'
 const props = defineProps(['user'])
 const router = useRouter()
 const wyloguj = () => {
@@ -14,14 +15,14 @@ const wyloguj = () => {
   }).then(() => router.go())
 }
 const new_login = ref("")
-const error = ref("")
+const toast = ref({})
 const change_login = async () => {
   if(!new_login.value){
-    error.value = "Podaj login!"
+    toast.value = {type:"error",msg:"Podaj login!"}
     return
   }
   if(!/^[A-Za-z0-9]+([A-Za-z0-9]*|[._-]?[A-Za-z0-9]+)*$/.test(new_login.value)){
-    error.value = "Login może składać się tylko z liter i cyfr oraz znaków . _ oraz -"
+    toast.value = {type:"error",msg:"Login może składać się tylko z liter i cyfr oraz znaków . _ oraz -"}
     return
   }
   if (document.querySelector(".decision")) document.querySelector('.decision').remove()
@@ -47,14 +48,14 @@ const change_login = async () => {
         })
       }).then(wyloguj())
     }else{
-      error.value = "Login zajęty!"
+      toast.value = {type:"error",msg:"Login zajęty!"}
     }
   })
 }
 const new_pass = ref("")
 const change_pass = async () => {
   if(!new_pass.value || new_pass.value.length < 5){
-    error.value = "Hasło musi zawierać min. 5 znaków!"
+    toast.value = {type:"error",msg:"Hasło musi zawierać min. 5 znaków!"}
     return
   }
   if (document.querySelector(".decision")) document.querySelector('.decision').remove()
@@ -78,7 +79,7 @@ const change_pass = async () => {
     })
   }).then(res => res.json()).then(res => {
     if(res){
-      error.value = "Nowe hasło musi się różnić od poprzedniego!"
+      toast.value = {type:"error",msg:"Nowe hasło musi się różnić od poprzedniego!"}
     }else{
       fetch("http://localhost:3000/zmianahasla", {
         credentials: 'include',
@@ -149,16 +150,5 @@ const usun_konto = async () => {
     <div @click="usun_konto" class="rounded-md my-7 cursor-pointer text-white bg-red-500 w-fit text-center p-3">Usuń konto</div>
   </div>
 
-  <div class="fixed bottom-4 z-50 right-4 min-w-64" v-if="error">
-    <div class="dark:bg-rose-950 flex justify-between bg-red-500 rounded-lg shadow-lg border border-red-600 dark:border-rose-900 p-4">
-        <p class="text-white text-lg mr-5 dark:text-slate-200">
-          {{ error }}
-        </p>
-        <button @click="error = ''" class="text-white dark:text-slate-200 focus:outline-none">
-            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-        </button>
-    </div>
-  </div>
+  <Toast :toast="toast" @closeToast="toast = {}"></Toast> 
 </template>

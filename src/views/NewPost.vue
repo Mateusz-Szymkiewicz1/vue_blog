@@ -5,6 +5,7 @@
   import FileUpload from 'primevue/fileupload';
   import Multiselect from '@vueform/multiselect'
   import { decision } from '../composables/Decision.vue'
+  import Toast from '../components/Toast.vue'
   const router = useRouter()
   const user = ref("")
   fetch("http://localhost:3000/logowanie", {
@@ -27,12 +28,12 @@
   const selected_tags = ref([])
   const tekst = ref("")
   const preview = ref(false)
-  const error = ref("")
+  const toast = ref({})
   document.documentElement.style.setProperty("--p-editor-toolbar-item-active-color", "#6d28d9");
   
   fetch('http://localhost:3000/posty').then(res => res.json()).then(res => {
         if(res.status == 0){
-            error.value = res.text
+            toast.value = {type:"error",msg:res.text}
         }else{
             res.forEach(el => {
                 if(el.tagi){
@@ -50,7 +51,7 @@
   const toggle_preview = () => {
     document.querySelector('.preview img').src = ""
     if(!tekst.value || !tytul.value){
-      error.value = "Wpisz tytuł/treść!"
+      toast.value = {type:"error",msg:"Wpisz tytuł/treść!"}
       return
     }
     document.querySelector('.preview div').innerHTML = tekst.value
@@ -61,7 +62,7 @@
     if(preview.value){
       document.querySelector('body').style = ''
     }else{
-      error.value = ""
+      toast.value = {}
       document.querySelector('body').style = 'overflow: hidden;'
     }
     preview.value = !preview.value
@@ -69,7 +70,7 @@
 
   const dodaj_post = async () => {
     if(!tekst.value || !tytul.value){
-      error.value = "Wpisz tytuł/treść!"
+      toast.value = {type:"error",msg:"Wpisz tytuł/treść!"}
       return
     }
     if (document.querySelector(".decision")) document.querySelector('.decision').remove()
@@ -158,18 +159,7 @@
     <i @click="toggle_preview" class="fa fa-close text-4xl absolute top-5 right-7 cursor-pointer"></i>
   </div>
 
-  <div class="fixed bottom-4 z-50 right-4 min-w-64" v-if="error">
-    <div class="dark:bg-rose-950 flex justify-between bg-red-500 rounded-lg shadow-lg border border-red-600 dark:border-rose-900 p-4">
-        <p class="text-white text-lg mr-5 dark:text-slate-200">
-          {{ error }}
-        </p>
-        <button @click="error = ''" class="text-white dark:text-slate-200 focus:outline-none">
-            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-        </button>
-    </div>
-  </div>
+  <Toast :toast="toast" @closeToast="toast = {}"></Toast>
 </template>
 
 <style>

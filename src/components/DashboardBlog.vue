@@ -99,9 +99,9 @@
             </div>
     </main>
     <div v-else>
-      <div class="flex lg:gap-4 ml-3 -mt-8 flex-col lg:flex-row">
-        <router-link to="/post/new"><div class="rounded-md flex !h-[38px] w-fit text-sm lg:mt-16 mt-14 mb-3 px-3 bg-violet-300 dark:bg-indigo-900 text-sm text-gray-800 dark:text-gray-400 items-center cursor-pointer"><i class="fa fa-circle-plus mr-2"></i><span>Nowy</span></div></router-link>
-        <div class="relative w-72 !h-[38px] flex lg:mt-16">
+      <div class="flex pt-16 lg:gap-4 ml-3 -mt-8 flex-col lg:flex-row">
+        <router-link to="/post/new" class="w-fit"><div class="rounded-md flex !h-[38px] w-fit text-sm mb-3 px-3 bg-violet-300 dark:bg-indigo-900 text-sm text-gray-800 dark:text-gray-400 items-center cursor-pointer"><i class="fa fa-circle-plus mr-2"></i><span>Nowy</span></div></router-link>
+        <div class="relative w-72 mb-3 !h-[38px] flex">
             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                 <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
@@ -109,12 +109,12 @@
             </div>
             <input type="search" v-model="search" class="block w-full p-2 ps-10 text-sm dark:text-slate-200 text-gray-900 border dark:border-indigo-950 border-gray-300 rounded-lg dark:bg-indigo-950 bg-violet-200" placeholder="Szukaj..."/>
         </div>
-        <Multiselect :searchable="true" class="lg:mt-16 mt-3 w-fit !p-0 !text-sm !text-gray-500 !h-[38px] dark:bg-indigo-950 bg-violet-200 rounded-lg border dark:border-indigo-950 border-gray-300" :max="5" :limit="10" mode="tags" placeholder="Tags" v-model="selected_tags" :options="tags">
+        <Multiselect :searchable="true" class="mb-3 w-fit !p-0 !text-sm !text-gray-500 !h-[38px] dark:bg-indigo-950 bg-violet-200 rounded-lg border dark:border-indigo-950 border-gray-300" :max="5" :limit="10" mode="tags" placeholder="Tags" v-model="selected_tags" :options="tags">
        <template v-slot:option="{ option }">
          <span class="p-1 w-full px-2 font-normal dark:bg-indigo-950 bg-violet-50 dark:text-slate-200 text-gray-800 hover:bg-violet-100 dark:hover:bg-indigo-900">{{ option.value }}</span>
        </template>
     </Multiselect>
-    <select v-model="sort" class="rounded-md !h-[38px] w-fit text-sm lg:mt-16 mt-3 px-3 bg-violet-200 dark:bg-indigo-950 text-sm text-gray-500 dark:text-gray-400">
+    <select v-model="sort" class="rounded-md mb-3 !h-[38px] w-fit text-sm px-3 bg-violet-200 dark:bg-indigo-950 text-sm text-gray-500 dark:text-gray-400">
         <option value="najnowsze" default>Data dodania: Najnowsze</option>
         <option value="najstarsze">Data dodania: Najstarsze</option>
     </select>

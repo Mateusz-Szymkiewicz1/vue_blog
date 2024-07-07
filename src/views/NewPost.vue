@@ -5,7 +5,6 @@
   import FileUpload from 'primevue/fileupload';
   import Multiselect from '@vueform/multiselect'
   import { decision } from '../composables/Decision.vue'
-  import Toast from '../components/Toast.vue'
   const router = useRouter()
   const user = ref("")
   fetch("http://localhost:3000/logowanie", {
@@ -28,12 +27,11 @@
   const selected_tags = ref([])
   const tekst = ref("")
   const preview = ref(false)
-  const toast = ref({})
   document.documentElement.style.setProperty("--p-editor-toolbar-item-active-color", "#6d28d9");
   
   fetch('http://localhost:3000/posty').then(res => res.json()).then(res => {
         if(res.status == 0){
-            toast.value = {type:"error",msg:res.text}
+            emit('toast', {type:"error",msg:res.text})
         }else{
             res.forEach(el => {
                 if(el.tagi){
@@ -51,7 +49,7 @@
   const toggle_preview = () => {
     document.querySelector('.preview img').src = ""
     if(!tekst.value || !tytul.value){
-      toast.value = {type:"error",msg:"Wpisz tytuł/treść!"}
+      emit('toast', {type:"error",msg:"Wpisz tytuł/treść!"})
       return
     }
     document.querySelector('.preview div').innerHTML = tekst.value
@@ -62,7 +60,7 @@
     if(preview.value){
       document.querySelector('body').style = ''
     }else{
-      toast.value = {}
+      emit('toast', {})
       document.querySelector('body').style = 'overflow: hidden;'
     }
     preview.value = !preview.value
@@ -70,7 +68,7 @@
 
   const dodaj_post = async () => {
     if(!tekst.value || !tytul.value){
-      toast.value = {type:"error",msg:"Wpisz tytuł/treść!"}
+      emit('toast', {type:"error",msg:"Wpisz tytuł/treść!"})
       return
     }
     if (document.querySelector(".decision")) document.querySelector('.decision').remove()
@@ -103,6 +101,7 @@
 </script>
 
 <template>
+  <div>
   <div v-if="user" class="px-8 md:px-16 mb-16">
     <h1 class="text-center font-semibold text-gray-900 mb-10 text-4xl mt-16 dark:text-slate-200">Nowy post</h1>
     <input v-model="tytul" type='text' maxlength="200" placeholder='Tytuł' class="w-full rounded-md py-3 px-4 bg-gray-100 dark:bg-neutral-700 text-sm outline-[#007bff] dark:text-slate-200 mb-5" />
@@ -158,8 +157,7 @@
     <div class="break-words md:pr-36 text-lg text-gray-700 dark:text-slate-400"></div>
     <i @click="toggle_preview" class="fa fa-close text-4xl absolute top-5 right-7 cursor-pointer"></i>
   </div>
-
-  <Toast :toast="toast" @closeToast="toast = {}"></Toast>
+</div>
 </template>
 
 <style>

@@ -1,9 +1,10 @@
 <script setup>
   import { RouterLink, RouterView, useRoute } from 'vue-router'
-  import { ref } from 'vue'
+  import { ref, watch } from 'vue'
   import Nav from './components/Nav.vue'
   import Footer from './components/Footer.vue'
   import CookieAlert from './components/CookieAlert.vue'
+  import Toast from './components/Toast.vue'
   const route = useRoute()
   const theme = ref("light")
   const show_cookie_alert = ref(false)
@@ -23,14 +24,26 @@
     theme.value = "dark"
     document.querySelector("html").className = "dark"
   }
+
+  const toast = ref({})
+  const show_toast = (obj) => {
+    toast.value = obj
+  }
+  
+  watch(route, () => {
+    if(!route.query.toast){
+      toast.value = {}
+    }
+  })
 </script>
 
 <template>
   <div id="container" class="dark:bg-neutral-950 bg-white">
     <Nav :url="route.name" :theme="theme" @themeSwitch="toggleTheme"></Nav>
-    <RouterView/>
+    <RouterView @toast="show_toast"/>
     <Footer></Footer>
     <CookieAlert></CookieAlert>
+    <Toast :toast="toast" @closeToast="toast = {}"></Toast>
   </div>
 </template>
 

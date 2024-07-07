@@ -2,7 +2,7 @@
 import {ref} from 'vue'
 import { useRouter } from 'vue-router'
 import { decision } from '../composables/Decision.vue'
-import Toast from '../components/Toast.vue'
+const emit = defineEmits(['toast'])
 const props = defineProps(['user'])
 const router = useRouter()
 const wyloguj = () => {
@@ -15,14 +15,13 @@ const wyloguj = () => {
   }).then(() => router.go())
 }
 const new_login = ref("")
-const toast = ref({})
 const change_login = async () => {
   if(!new_login.value){
-    toast.value = {type:"error",msg:"Podaj login!"}
+    emit('toast',{type:"error",msg:"Podaj login!"})
     return
   }
   if(!/^[A-Za-z0-9]+([A-Za-z0-9]*|[._-]?[A-Za-z0-9]+)*$/.test(new_login.value)){
-    toast.value = {type:"error",msg:"Login może składać się tylko z liter i cyfr oraz znaków . _ oraz -"}
+    emit('toast',{type:"error",msg:"Login może składać się tylko z liter i cyfr oraz znaków . _ oraz -!"})
     return
   }
   if (document.querySelector(".decision")) document.querySelector('.decision').remove()
@@ -48,14 +47,14 @@ const change_login = async () => {
         })
       }).then(wyloguj())
     }else{
-      toast.value = {type:"error",msg:"Login zajęty!"}
+      emit('toast',{type:"error",msg:"Login zajęty!"})
     }
   })
 }
 const new_pass = ref("")
 const change_pass = async () => {
   if(!new_pass.value || new_pass.value.length < 5){
-    toast.value = {type:"error",msg:"Hasło musi zawierać min. 5 znaków!"}
+    emit('toast',{type:"error",msg:"Hasło musi zawierać min. 5 znaków!"})
     return
   }
   if (document.querySelector(".decision")) document.querySelector('.decision').remove()
@@ -79,7 +78,7 @@ const change_pass = async () => {
     })
   }).then(res => res.json()).then(res => {
     if(res){
-      toast.value = {type:"error",msg:"Nowe hasło musi się różnić od poprzedniego!"}
+      emit('toast',{type:"error",msg:"Nowe hasło musi się różnić od poprzedniego!"})
     }else{
       fetch("http://localhost:3000/zmianahasla", {
         credentials: 'include',
@@ -149,6 +148,4 @@ const usun_konto = async () => {
     <h2 class="text-2xl clear-both mt-16 font-semibold text-red-600">Strefa zagrożenia</h2>
     <div @click="usun_konto" class="rounded-md my-7 cursor-pointer text-white bg-red-500 w-fit text-center p-3">Usuń konto</div>
   </div>
-
-  <Toast :toast="toast" @closeToast="toast = {}"></Toast> 
 </template>

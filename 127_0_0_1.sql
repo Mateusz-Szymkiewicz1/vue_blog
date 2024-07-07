@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Lip 06, 2024 at 06:10 PM
+-- Generation Time: Lip 07, 2024 at 05:46 PM
 -- Wersja serwera: 10.4.32-MariaDB
 -- Wersja PHP: 8.2.12
 
@@ -20,6 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `vue_blog`
 --
+DROP DATABASE IF EXISTS `vue_blog`;
 CREATE DATABASE IF NOT EXISTS `vue_blog` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `vue_blog`;
 
@@ -63,7 +64,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`sid`, `session`, `expires`) VALUES
-('bhgCwbkDhDJ_PsHO08yrqoKgNp8poKoW', '{\"cookie\":{\"originalMaxAge\":172800000,\"expires\":\"2024-07-07T14:20:11.587Z\",\"httpOnly\":true,\"path\":\"/\"},\"user\":\"admin\"}', 1720362012);
+('ahG-aCOUPZeOdSWwVAAysRZTdgM6mkfS', '{\"cookie\":{\"originalMaxAge\":172800000,\"expires\":\"2024-07-09T15:43:12.701Z\",\"httpOnly\":true,\"path\":\"/\"},\"user\":\"admin\"}', 1720539793);
 
 -- --------------------------------------------------------
 
@@ -82,7 +83,22 @@ CREATE TABLE `uzytkownicy` (
 --
 
 INSERT INTO `uzytkownicy` (`id`, `login`, `haslo`) VALUES
-(2, 'admin', '$2a$10$PxMSaNItQp06Bp21iKSozu/2j7zCjrKVEoLbA2RWxKcwyD.5kSFB.');
+(2, 'admin', '$2a$10$JyJHl3/KMhDzmciWELOwMebUXray38BMUPCn0aJA2HksB5IshFVOG');
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `wiadomosci`
+--
+
+CREATE TABLE `wiadomosci` (
+  `id` int(11) NOT NULL,
+  `imie` text NOT NULL,
+  `email` text NOT NULL,
+  `tytul` text NOT NULL,
+  `tresc` text NOT NULL,
+  `data` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Indeksy dla zrzutów tabel
@@ -107,6 +123,12 @@ ALTER TABLE `uzytkownicy`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indeksy dla tabeli `wiadomosci`
+--
+ALTER TABLE `wiadomosci`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -114,12 +136,18 @@ ALTER TABLE `uzytkownicy`
 -- AUTO_INCREMENT for table `posty`
 --
 ALTER TABLE `posty`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `uzytkownicy`
 --
 ALTER TABLE `uzytkownicy`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `wiadomosci`
+--
+ALTER TABLE `wiadomosci`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 

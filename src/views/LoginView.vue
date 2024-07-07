@@ -1,15 +1,14 @@
 <script setup>
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
-  import Toast from '../components/Toast.vue'
   const router = useRouter()
   const login = ref("")
   const haslo = ref("")
-  const toast = ref({})
+  const emit = defineEmits(['toast'])
   const zaloguj = () => {
     if(!login.value || !haslo.value) return
     if(!/^[A-Za-z0-9]+([A-Za-z0-9]*|[._-]?[A-Za-z0-9]+)*$/.test(login.value)){
-      toast.value = {type:"error",msg:"Login może składać się tylko z liter i cyfr oraz znaków . _ oraz -"}
+      emit('toast',{type:"error",msg:"Login może składać się tylko z liter i cyfr oraz znaków . _ oraz -"})
       return
     } 
     fetch("http://localhost:3000/logowanie", {
@@ -24,9 +23,10 @@
       }),
     }).then(res => res.json()).then(res => {
       if(res.status == 0){
-        toast.value = {type:"error",msg:res.text}
+        emit('toast',{type:"error",msg:res.text})
       }else{
-        router.push('/')
+        router.push('/?toast=true')
+        emit('toast',{type:"success",msg:"Zalogowano!"})
       }
     })
   }
@@ -70,5 +70,4 @@
       </div>
       <button @click.prevent="zaloguj" class="text-white bg-violet-400 hover:bg-violet-500 dark:bg-indigo-950 dark:hover:bg-indigo-900 font-semibold rounded-md text-sm px-4 py-3 w-full">Zaloguj</button>
   </form>
-  <Toast :toast="toast" @closeToast="toast = {}"></Toast>
 </template>

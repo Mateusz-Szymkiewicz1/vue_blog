@@ -1,18 +1,22 @@
 <script setup>
     import {ref} from 'vue'
-    import Toast from '../components/Toast.vue'
     const imie = ref("")
     const email = ref("")
     const tytul = ref("")
     const tresc = ref("")
-    const toast = ref({})
+    const emit = defineEmits(['toast'])
+
     const wyslij = () => {
+        if(!imie.value || !email.value || !tytul.value || !tresc.value){
+            emit('toast', {type:"error", msg: "Uzupełnij dane!"})
+            return
+        }
         if(!/^[\p{L}\p{M} ]+$/u.test(imie.value)){
-            toast.value = {type: "error", msg: "Imię może składać się tylko z liter!"}
+            emit('toast',{type: "error", msg: "Imię może składać się tylko z liter!"})
             return
         }
         if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)){
-            toast.value = {type: "error", msg: "Błędny email!"}
+            emit('toast',{type: "error", msg: "Błędny email!"})
             return
         }
         fetch("http://localhost:3000/wyslijwiadomosc", {
@@ -32,11 +36,13 @@
            email.value = ""
            tytul.value = ""
            tresc.value = ""
+           emit('toast', {type: "success", msg: "Wysłano wiadomość!"})
         })
     }
 </script>
 
 <template>
+    <div>
     <div class="grid p-5 my-20 mb-32 md:grid-cols-2 items-center gap-16 mx-auto max-w-4xl">
         <div>
             <h1 class="text-4xl dark:text-slate-200 font-semibold">Kontakt</h1>
@@ -103,6 +109,5 @@
                 class="text-white bg-violet-400 hover:bg-violet-500 font-semibold rounded-md text-sm px-4 py-3 w-full dark:bg-indigo-950 dark:hover:bg-indigo-900">Wyślij</button>
         </form>
     </div>
-
-    <Toast :toast="toast" @closeToast="toast = {}"></Toast> 
+</div>
 </template>

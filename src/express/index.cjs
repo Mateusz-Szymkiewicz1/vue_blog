@@ -7,8 +7,6 @@ const multer = require("multer");
 var crypto = require ("crypto")
 var path = require ("path")
 var fs = require('fs');
-const { rewriteDefault } = require('vue/compiler-sfc')
-const { renderSlot } = require('vue')
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, '../../photos')
@@ -19,7 +17,7 @@ const storage = multer.diskStorage({
     });
   }
 });
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage, limits: {fieldSize: 50*1024*1024} });
 MySQLStore = require('connect-mysql')(session)
 const app = express().use(express.json())
 

@@ -1,11 +1,24 @@
 <script setup>
   import {ref} from 'vue'
-  import { useRouter } from 'vue-router'
+  import { useRouter, useRoute } from 'vue-router'
   import Editor from 'primevue/editor';
+  Editor.methods.renderValue = function renderValue(value) {
+  if (this.quill) {
+    if (value) {
+      const delta = this.quill.clipboard.convert({ html: value });
+      this.quill.setContents(delta, 'silent');
+    } else {
+      this.quill.setText('');
+    }
+  }
+};
   import FileUpload from 'primevue/fileupload';
   import Multiselect from '@vueform/multiselect'
   import { decision } from '../composables/Decision.vue'
+  const emit = defineEmits(['toast'])
   const router = useRouter()
+  const route = useRoute()
+  const post_edit = ref()
   const user = ref("")
   fetch("http://localhost:3000/logowanie", {
       credentials: 'include',
@@ -45,6 +58,23 @@
             })
         }
     })
+
+
+  if(route.params.id){
+    fetch('http://localhost:3000/post/'+route.params.id).then(res => res.json()).then(res => {
+      if(res.status == 0){
+        router.go("/")
+      }else{
+            post_edit.value = res[0]
+            if(post_edit.value.tagi){
+              post_edit.value.tagi = JSON.parse(post_edit.value.tagi)
+            }
+            tytul.value = post_edit.value.tytul
+            tekst.value = post_edit.value.tresc
+            selected_tags.value = post_edit.value.tagi
+        }
+    })
+  }
 
   const toggle_preview = () => {
     document.querySelector('.preview img').src = ""
@@ -102,8 +132,11 @@
 
 <template>
   <div>
-  <div v-if="user" class="px-8 md:px-16 mb-16">
-    <h1 class="text-center font-semibold text-gray-900 mb-10 text-4xl mt-16 dark:text-slate-200">Nowy post</h1>
+  <div v-if="user" class="px-8 md:px-16 mb-40">
+    <h1 class="text-center font-semibold text-gray-900 mb-10 text-4xl mt-16 dark:text-slate-200">
+      <span v-if="post_edit">Edytuj post</span>
+      <span v-else>Nowy post</span>
+    </h1>
     <input v-model="tytul" type='text' maxlength="200" placeholder='Tytuł' class="w-full rounded-md py-3 px-4 bg-gray-100 dark:bg-neutral-700 text-sm outline-[#007bff] dark:text-slate-200 mb-5" />
     <FileUpload :invalidFileTypeMessage="'Wybrano zły format pliku!'" :chooseLabel="'Dodaj miniaturkę'" :cancelLabel="'Anuluj'" ref="thumbnail" name="thumbnail[]" accept="image/*" :showUploadButton="false" :fileLimit="1">
       <template #empty>
@@ -134,7 +167,6 @@
         </span>
         <span class="ql-formats">
           <button class="ql-link"></button>
-          <button class="ql-image"></button>
         </span>
         <span class="ql-formats">
           <button class="ql-code-block"></button>

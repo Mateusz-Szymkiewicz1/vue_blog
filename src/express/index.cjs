@@ -162,7 +162,26 @@ function dodajPost(req, res) {
   if(req.file){
     filename = req.file.filename
   }
+  if(req.body.tagi){
+    req.body.tagi = JSON.stringify(req.body.tagi.split(","))
+  }
   connection.query(`INSERT INTO posty(tytul, tresc, data, tagi, img) VALUES (?,?,NOW(),?,?);`,[req.body.tytul,req.body.tekst,req.body.tagi,filename], (err, rows, fields) => {
+    res.json("done")
+  })
+}
+
+app.post("/edytujpost", upload.single("img"), edytujPost);
+
+function edytujPost(req, res) {
+  if(!req.session.user) return
+  let filename = req.body.original_img
+  if(req.file){
+    filename = req.file.filename
+  }
+  if(req.body.tagi){
+    req.body.tagi = JSON.stringify(req.body.tagi.split(","))
+  }
+  connection.query(`UPDATE posty SET tytul = ?, tresc = ?, tagi = ?, img = ? WHERE id = ?;`,[req.body.tytul,req.body.tekst,req.body.tagi,filename,req.body.id], (err, rows, fields) => {
     res.json("done")
   })
 }

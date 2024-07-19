@@ -16,7 +16,6 @@
             if(post.value.tagi){
               post.value.tagi = JSON.parse(post.value.tagi)
             }
-            console.log(post.value)
         }
   })
 

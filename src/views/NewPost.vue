@@ -71,7 +71,7 @@
             }
             tytul.value = post_edit.value.tytul
             tekst.value = post_edit.value.tresc
-            selected_tags.value = post_edit.value.tagi
+            if(post_edit.value.tagi) selected_tags.value = post_edit.value.tagi
         }
     })
   }
@@ -86,6 +86,8 @@
     document.querySelector('.preview h2 span').innerText = tytul.value
     if(thumbnail.value.files[0]){
       document.querySelector('.preview img').src = thumbnail.value.files[0].objectURL
+    }else if(post_edit.value && post_edit.value.img){
+      document.querySelector('.preview img').src = "../../photos/"+post_edit.value.img
     }
     if(preview.value){
       document.querySelector('body').style = ''
@@ -122,6 +124,34 @@
     }).then(router.push('/dashboard'))
   }
 
+  const edytuj_post = async () => {
+    if(!tekst.value || !tytul.value){
+      emit('toast', {type:"error",msg:"Wpisz tytuł/treść!"})
+      return
+    }
+    if (document.querySelector(".decision")) document.querySelector('.decision').remove()
+    const response = await decision().then(function () {
+        document.querySelector(".decision").remove()
+        return
+    }, function () {
+        document.querySelector(".decision").remove()
+        return "stop"
+    });
+    if(response) return
+    const formData  = new FormData();
+    formData.append('id', post_edit.value.id)
+    formData.append('tytul', tytul.value);
+    formData.append('tekst', tekst.value);
+    formData.append('tagi', selected_tags.value);
+    formData.append('img', thumbnail.value.files[0]);
+    formData.append("original_img", post_edit.value.img)
+    fetch("http://localhost:3000/edytujpost", {
+      credentials: 'include',
+      method: "POST",
+      body: formData
+    }).then(router.push('/dashboard'))
+  }
+
   const data = ref("")
   var today = new Date();
   var dd = String(today.getDate()).padStart(2, '0');
@@ -138,7 +168,8 @@
       <span v-else>Nowy post</span>
     </h1>
     <input v-model="tytul" type='text' maxlength="200" placeholder='Tytuł' class="w-full rounded-md py-3 px-4 bg-gray-100 dark:bg-neutral-700 text-sm outline-[#007bff] dark:text-slate-200 mb-5" />
-    <FileUpload :invalidFileTypeMessage="'Wybrano zły format pliku!'" :chooseLabel="'Dodaj miniaturkę'" :cancelLabel="'Anuluj'" ref="thumbnail" name="thumbnail[]" accept="image/*" :showUploadButton="false" :fileLimit="1">
+    <img class="mb-4 max-w-96" v-if="post_edit && post_edit.img" :src="'../../photos/'+post_edit.img" onerror="this.src='../../src/assets/placeholder.png'">
+    <FileUpload :invalidFileTypeMessage="'Wybrano zły format pliku!'" :chooseLabel="post_edit ? 'Zmień miniaturkę' : 'Dodaj miniaturkę'" :cancelLabel="'Anuluj'" ref="thumbnail" name="thumbnail[]" accept="image/*" :showUploadButton="false" :fileLimit="1">
       <template #empty>
           <span>Przeciągnij tu plik aby dodać.</span>
       </template>
@@ -175,7 +206,8 @@
     </template>
       </Editor>
       <div @click="toggle_preview" class="rounded-md my-5 px-6 cursor-pointer text-white bg-violet-600 float-left p-3">Podgląd</div>
-      <div @click="dodaj_post" class="rounded-md my-5 ml-2 px-6 cursor-pointer text-white bg-violet-600 float-left p-3">Dodaj</div>
+      <div v-if="post_edit" @click="edytuj_post" class="rounded-md my-5 ml-2 px-6 cursor-pointer text-white bg-violet-600 float-left p-3">Edytuj</div>
+      <div v-else @click="dodaj_post" class="rounded-md my-5 ml-2 px-6 cursor-pointer text-white bg-violet-600 float-left p-3">Dodaj</div>
   </div>
 
   <div class="preview z-50 max-h-full overflow-y-scroll px-6 lg:px-8 fixed top-0 left-0 right-0 min-h-full bg-white dark:bg-neutral-950" :class="preview ? 'block' : 'hidden'">
@@ -185,8 +217,8 @@
       <span class="text-lg ml-2 dark:text-slate-400 font-normal mt-6 text-slate-600">{{ data }}</span>
       <span v-for="tag in selected_tags" class="rounded-md dark:bg-indigo-700 bg-purple-50 px-2 py-1 text-sm dark:text-indigo-200 text-purple-700 ring-1 ring-inset ring-purple-700/10 ml-2">{{ tag }}</span>
     </h2>
-    <img>
-    <div class="break-words md:pr-36 text-lg text-gray-700 dark:text-slate-400"></div>
+    <img onerror="this.src='../../src/assets/placeholder.png'">
+    <div class="break-words md:pr-36 text-lg py-10 text-gray-700 dark:text-slate-400"></div>
     <i @click="toggle_preview" class="fa fa-close text-4xl absolute top-5 right-7 cursor-pointer"></i>
   </div>
 </div>

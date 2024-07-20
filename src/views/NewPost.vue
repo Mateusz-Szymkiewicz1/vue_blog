@@ -152,6 +152,29 @@
     }).then(router.push('/dashboard'))
   }
 
+  const delete_thumbnail = async () => {
+    if (document.querySelector(".decision")) document.querySelector('.decision').remove()
+    const response = await decision().then(function () {
+        document.querySelector(".decision").remove()
+        return
+    }, function () {
+        document.querySelector(".decision").remove()
+        return "stop"
+    });
+    if(response) return
+    fetch("http://localhost:3000/usunimg", {
+      credentials: 'include',
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        img: post_edit.value.img,
+        id: post_edit.value.id
+      }),
+    }).then(post_edit.value.img = "")
+  }
+
   const data = ref("")
   var today = new Date();
   var dd = String(today.getDate()).padStart(2, '0');
@@ -168,7 +191,10 @@
       <span v-else>Nowy post</span>
     </h1>
     <input v-model="tytul" type='text' maxlength="200" placeholder='Tytuł' class="w-full rounded-md py-3 px-4 bg-gray-100 dark:bg-neutral-700 text-sm outline-[#007bff] dark:text-slate-200 mb-5" />
-    <img class="mb-4 max-w-96" v-if="post_edit && post_edit.img" :src="'../../photos/'+post_edit.img" onerror="this.src='../../src/assets/placeholder.png'">
+    <div v-if="post_edit && post_edit.img" class="flex flex-wrap">
+      <img class="mb-4 max-w-96 mr-4" :src="'../../photos/'+post_edit.img" onerror="this.src='../../src/assets/placeholder.png'">
+      <div @click="delete_thumbnail" class="rounded-md mb-4 px-5 h-fit cursor-pointer text-white bg-violet-600 float-left p-3"><i class="fa fa-trash mr-3"></i>Usuń</div>
+    </div>
     <FileUpload :invalidFileTypeMessage="'Wybrano zły format pliku!'" :chooseLabel="post_edit ? 'Zmień miniaturkę' : 'Dodaj miniaturkę'" :cancelLabel="'Anuluj'" ref="thumbnail" name="thumbnail[]" accept="image/*" :showUploadButton="false" :fileLimit="1">
       <template #empty>
           <span>Przeciągnij tu plik aby dodać.</span>
@@ -205,7 +231,7 @@
         </span>
     </template>
       </Editor>
-      <div @click="toggle_preview" class="rounded-md my-5 px-6 cursor-pointer text-white bg-violet-600 float-left p-3">Podgląd</div>
+      <div @click="toggle_preview" class="rounded-md my-5 px-5 cursor-pointer text-white bg-violet-600 float-left p-3"><i class="fa fa-search mr-3"></i>Podgląd</div>
       <div v-if="post_edit" @click="edytuj_post" class="rounded-md my-5 ml-2 px-6 cursor-pointer text-white bg-violet-600 float-left p-3">Edytuj</div>
       <div v-else @click="dodaj_post" class="rounded-md my-5 ml-2 px-6 cursor-pointer text-white bg-violet-600 float-left p-3">Dodaj</div>
   </div>

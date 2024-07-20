@@ -146,7 +146,9 @@ app.post('/usunpost', (req,res) => {
   if(!req.session.user) return
   connection.query(`SELECT img FROM posty WHERE id = ?`,[req.body.id], (err, rows, fields) => {
     if(rows[0] && rows[0].img){
-      fs.unlinkSync('../../photos/'+rows[0].img);
+      fs.unlink('../../photos/'+rows[0].img, (err) => {
+        if (err) console.log("Was unable to delete the file")
+      })
     }
   })
   connection.query(`DELETE FROM posty WHERE id = ?`,[req.body.id], (err, rows, fields) => {
@@ -177,6 +179,9 @@ function edytujPost(req, res) {
   let filename = req.body.original_img
   if(req.file){
     filename = req.file.filename
+    fs.unlink("../../photos/"+req.body.original_img, (err) => {
+      if (err) console.log("Was unable to delete the file")
+    })
   }
   if(req.body.tagi){
     req.body.tagi = JSON.stringify(req.body.tagi.split(","))
@@ -185,5 +190,15 @@ function edytujPost(req, res) {
     res.json("done")
   })
 }
+
+app.post('/usunimg', (req,res) => {
+  if(!req.session.user) return
+  fs.unlink('../../photos/'+req.body.img, (err) => {
+    if (err) console.log("Was unable to delete the file")
+  })
+  connection.query(`UPDATE posty SET img = "" WHERE id = ?;`,[req.body.id], (err, rows, fields) => {
+    res.json("done")
+  })
+})
 
 app.listen(3000)

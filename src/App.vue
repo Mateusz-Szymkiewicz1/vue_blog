@@ -8,6 +8,8 @@
   const route = useRoute()
   const theme = ref("light")
   const show_cookie_alert = ref(false)
+  const reload = ref(false)
+
   const toggleTheme = () => {
       if(theme.value == "light"){
         theme.value = "dark"
@@ -34,13 +36,16 @@
     if(!route.query.toast){
       toast.value = {}
     }
+    if(route.query.reload){
+      reload.value = !reload.value
+    }
   })
 </script>
 
 <template>
   <div id="container" class="dark:bg-neutral-950 bg-white">
-    <Nav :url="route.name" :theme="theme" @themeSwitch="toggleTheme"></Nav>
-    <RouterView @toast="show_toast"/>
+    <Nav :key="reload" :url="route.name" :theme="theme" @themeSwitch="toggleTheme"></Nav>
+    <RouterView :key="reload" @toast="show_toast"/>
     <Footer></Footer>
     <CookieAlert></CookieAlert>
     <Toast :toast="toast" @closeToast="toast = {}"></Toast>

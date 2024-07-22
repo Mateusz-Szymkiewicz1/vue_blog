@@ -2,6 +2,7 @@
   import { useRoute, useRouter } from 'vue-router'
   import { ref, onUpdated } from 'vue'
   import { decision } from '../composables/Decision.vue'
+  const emit = defineEmits(['toast'])
   const route = useRoute()
   const router = useRouter()
   const id = route.params.id
@@ -55,7 +56,8 @@
         })
       }).then(res => res.json()).then(res => {
         if(res == "done"){
-          router.replace("/dashboard")
+          emit("toast", {type:"message", msg: "Usunięto post!"})
+          router.replace("/dashboard?toast=true")
         }
       })
     }

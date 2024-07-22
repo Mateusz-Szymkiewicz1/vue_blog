@@ -12,7 +12,7 @@ const wyloguj = () => {
     headers: {
       "Content-Type": "application/json",
     }
-  }).then(() => router.go())
+  }).then(() => router.push("/?reload=true&toast=true"))
 }
 const new_login = ref("")
 const change_login = async () => {
@@ -45,7 +45,10 @@ const change_login = async () => {
           nowy_login: new_login.value,
           stary_login: props.user
         })
-      }).then(wyloguj())
+      }).then(() => {
+        emit('toast',{type:"message",msg:"Zmieniono login!"})
+        wyloguj()
+      })
     }else{
       emit('toast',{type:"error",msg:"Login zajęty!"})
     }
@@ -90,7 +93,10 @@ const change_pass = async () => {
           nowe_haslo: new_pass.value,
           login: props.user
         })
-      }).then(wyloguj())
+      }).then(() => {
+        emit('toast',{type:"message",msg:"Zmieniono hasło!"})
+        wyloguj()
+      })
     }
   })
 }

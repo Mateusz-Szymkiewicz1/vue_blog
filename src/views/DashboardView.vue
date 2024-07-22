@@ -40,9 +40,9 @@
         <span @click="change_side('wiadomosci');$emit('toast', {})" class="h-full cursor-pointer flex items-center px-3" :class="current_page == 'wiadomosci' ? 'text-violet-700' : null"><i class="fa fa-inbox mr-2"></i>Wiadomości</span>
         <span @click="change_side('konto');$emit('toast', {})" class="h-full cursor-pointer flex items-center px-3" :class="current_page == 'konto' ? 'text-violet-700' : null"><i class="fa fa-user mr-2"></i>Konto</span>
       </div>
-      <DashboardBlog v-if="current_page == 'blog'"></DashboardBlog>
+      <DashboardBlog v-if="current_page == 'blog'" @toast="(e) => $emit('toast', e)"></DashboardBlog>
       <DashboardKonto v-if="current_page == 'konto'" :user="user" @toast="(e) => $emit('toast', e)"></DashboardKonto>
-      <DashboardInbox v-if="current_page == 'wiadomosci'"></DashboardInbox>
+      <DashboardInbox v-if="current_page == 'wiadomosci'" @toast="(e) => $emit('toast', e)"></DashboardInbox>
     </div>
   </div>
 </template>

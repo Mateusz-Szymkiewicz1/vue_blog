@@ -78,6 +78,7 @@
 
   const toggle_preview = () => {
     document.querySelector('.preview img').src = ""
+    document.querySelector('.preview img').onerror = ""
     if(!tekst.value || !tytul.value){
       emit('toast', {type:"error",msg:"Wpisz tytuł/treść!"})
       return
@@ -86,8 +87,14 @@
     document.querySelector('.preview h2 span').innerText = tytul.value
     if(thumbnail.value.files[0]){
       document.querySelector('.preview img').src = thumbnail.value.files[0].objectURL
+      document.querySelector('.preview img').onerror =  () => {
+          document.querySelector('.preview img').src='../../src/assets/placeholder.png'
+      }
     }else if(post_edit.value && post_edit.value.img){
       document.querySelector('.preview img').src = "../../photos/"+post_edit.value.img
+      document.querySelector('.preview img').onerror =  () => {
+          document.querySelector('.preview img').src='../../src/assets/placeholder.png'
+      }
     }
     if(preview.value){
       document.querySelector('body').style = ''
@@ -121,7 +128,10 @@
       credentials: 'include',
       method: "POST",
       body: formData
-    }).then(router.push('/dashboard'))
+    }).then(() => {
+      emit('toast', {type:"message",msg:"Dodano post!"})
+      router.push('/dashboard?toast=true')
+    })
   }
 
   const edytuj_post = async () => {
@@ -149,7 +159,10 @@
       credentials: 'include',
       method: "POST",
       body: formData
-    }).then(router.push('/dashboard'))
+    }).then(() => {
+      emit('toast', {type:"message",msg:"Edytowano post!"})
+      router.push('/dashboard?toast=true')
+    })
   }
 
   const delete_thumbnail = async () => {
@@ -172,7 +185,10 @@
         img: post_edit.value.img,
         id: post_edit.value.id
       }),
-    }).then(post_edit.value.img = "")
+    }).then(() => {
+      emit('toast', {type:"message",msg:"Usunięto miniaturkę!"})
+      post_edit.value.img = ""
+    })
   }
 
   const data = ref("")
@@ -232,8 +248,8 @@
     </template>
       </Editor>
       <div @click="toggle_preview" class="rounded-md my-5 px-5 cursor-pointer text-white bg-violet-600 float-left p-3"><i class="fa fa-search mr-3"></i>Podgląd</div>
-      <div v-if="post_edit" @click="edytuj_post" class="rounded-md my-5 ml-2 px-6 cursor-pointer text-white bg-violet-600 float-left p-3">Edytuj</div>
-      <div v-else @click="dodaj_post" class="rounded-md my-5 ml-2 px-6 cursor-pointer text-white bg-violet-600 float-left p-3">Dodaj</div>
+      <div v-if="post_edit" @click="edytuj_post" class="rounded-md my-5 ml-2 px-5 cursor-pointer text-white bg-violet-600 float-left p-3"><i class="fa fa-pencil mr-3"></i>Edytuj</div>
+      <div v-else @click="dodaj_post" class="rounded-md my-5 ml-2 px-5 cursor-pointer text-white bg-violet-600 float-left p-3"><i class="fa fa-circle-plus mr-3"></i>Dodaj</div>
   </div>
 
   <div class="preview z-50 max-h-full overflow-y-scroll px-6 lg:px-8 fixed top-0 left-0 right-0 min-h-full bg-white dark:bg-neutral-950" :class="preview ? 'block' : 'hidden'">
@@ -243,7 +259,7 @@
       <span class="text-lg ml-2 dark:text-slate-400 font-normal mt-6 text-slate-600">{{ data }}</span>
       <span v-for="tag in selected_tags" class="rounded-md dark:bg-indigo-700 bg-purple-50 px-2 py-1 text-sm dark:text-indigo-200 text-purple-700 ring-1 ring-inset ring-purple-700/10 ml-2">{{ tag }}</span>
     </h2>
-    <img onerror="this.src='../../src/assets/placeholder.png'">
+    <img>
     <div class="break-words md:pr-36 text-lg py-10 text-gray-700 dark:text-slate-400"></div>
     <i @click="toggle_preview" class="fa fa-close text-4xl absolute top-5 right-7 cursor-pointer"></i>
   </div>

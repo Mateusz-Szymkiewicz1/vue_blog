@@ -2,6 +2,7 @@
   import {ref, watch} from 'vue'
   import Multiselect from '@vueform/multiselect'
   import { decision } from '../composables/Decision.vue'
+  const emit = defineEmits(['toast'])
   const wpisy = ref([])
   const wpisy_backup = ref([])
   const error = ref("")
@@ -84,6 +85,7 @@
         if(res == "done"){
           wpisy_backup.value = wpisy_backup.value.filter((item) => item.id !== id);
           wpisy.value = wpisy.value.filter((item) => item.id !== id);
+          emit('toast', {type:"message",msg:"Usunięto post!"})
         }
       })
     }

@@ -106,11 +106,10 @@ app.post('/wyloguj', (req,res) => {
 })
 
 app.post('/zmianaloginu', (req,res) => {
-  console.log(req.session)
-    if(!req.session.user) return
-    connection.query(`UPDATE uzytkownicy SET login = ? WHERE login = ?`,[req.body.nowy_login, req.body.stary_login], (err, rows, fields) => {
-      res.json(`done`)
-    })
+  if(!req.session.user) return
+  connection.query(`UPDATE uzytkownicy SET login = ? WHERE login = ?`,[req.body.nowy_login, req.body.stary_login], (err, rows, fields) => {
+    res.json(`done`)
+  })
 })
 
 app.post('/sprawdzhaslo', (req,res) => {
@@ -198,6 +197,20 @@ app.post('/usunimg', (req,res) => {
   })
   connection.query(`UPDATE posty SET img = "" WHERE id = ?;`,[req.body.id], (err, rows, fields) => {
     res.json("done")
+  })
+})
+
+app.get('/wiadomosci', (req,res) => {
+  connection.query(`SELECT * FROM wiadomosci ORDER BY data DESC`, (err, rows, fields) => {
+    if(err){
+      res.send({status:0, text:"Nie udało się połączyć z bazą danych :("})
+      return;
+    }
+    if(rows){
+      res.send(rows)
+    }else{
+      res.send({ status: 0, text: "Nie masz żadnych nowych wiadomości!"})
+    }
   })
 })
 

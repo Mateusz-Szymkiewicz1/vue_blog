@@ -32,9 +32,9 @@
 </script>
 
 <template>
-  <div v-if="user">
+  <div v-if="user" class="mb-10">
     <h1 class="text-center font-semibold text-gray-900 text-4xl mt-16 dark:text-slate-200">Panel Zarządzania</h1>
-    <div class="w-auto dark:bg-neutral-900 bg-violet-100 dark:text-slate-200 m-10">
+    <div class="w-auto dark:bg-neutral-900 bg-violet-100 text-indigo-950 dark:text-slate-200 m-10">
       <div class="bg-violet-200 text-md sm:text-lg md:text-2xl dark:bg-neutral-800 h-14 flex items-center">
         <span @click="change_side('blog');$emit('toast', {})" class="h-full cursor-pointer flex items-center px-3" :class="current_page == 'blog' ? 'text-violet-700' : null"><i class="fa fa-book mr-2"></i>Blog</span>
         <span @click="change_side('wiadomosci');$emit('toast', {})" class="h-full cursor-pointer flex items-center px-3" :class="current_page == 'wiadomosci' ? 'text-violet-700' : null"><i class="fa fa-inbox mr-2"></i>Wiadomości</span>
@@ -42,7 +42,7 @@
       </div>
       <DashboardBlog v-if="current_page == 'blog'" @toast="(e) => $emit('toast', e)"></DashboardBlog>
       <DashboardKonto v-if="current_page == 'konto'" :user="user" @toast="(e) => $emit('toast', e)"></DashboardKonto>
-      <DashboardInbox v-if="current_page == 'wiadomosci'" @toast="(e) => $emit('toast', e)"></DashboardInbox>
+      <DashboardInbox v-if="current_page == 'wiadomosci'" :user="user" @toast="(e) => $emit('toast', e)"></DashboardInbox>
     </div>
   </div>
 </template>

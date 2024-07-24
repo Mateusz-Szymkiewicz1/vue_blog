@@ -214,4 +214,14 @@ app.get('/wiadomosci', (req,res) => {
   })
 })
 
+app.post('/usunwiadomosci', (req,res) => {
+  if(!req.session.user) return
+  if(!/^[0-9, ]*$/.test(req.body.id)){
+    return
+  }
+  connection.query(`DELETE FROM wiadomosci WHERE id IN(${req.body.id})`,(err, rows, fields) => {
+    res.json(`done`)
+  })
+})
+
 app.listen(3000)

@@ -11,6 +11,10 @@
             emit('toast', {type:"error", msg: "Uzupełnij dane!"})
             return
         }
+        if(tresc.value.length < 30){
+            emit('toast', {type:"error", msg: "Napisz coś więcej!"})
+            return
+        }
         if(!/^[\p{L}\p{M} ]+$/u.test(imie.value)){
             emit('toast',{type: "error", msg: "Imię może składać się tylko z liter!"})
             return

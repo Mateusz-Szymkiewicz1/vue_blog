@@ -65,7 +65,10 @@ app.get('/posty', (req,res) => {
 app.get('/post/:id', (req,res) => {
   connection.query(`SELECT * FROM posty WHERE id = ?`,[req.params.id], (err, rows, fields) => {
     if(rows && rows.length == 1){
-      res.send(rows)
+      connection.query(`SELECT * FROM opinie WHERE opinie.post = ?`,[req.params.id], (err2, rows2, fields2) => {
+        rows[0].opinie = [...rows2]
+        res.send(rows)
+      })
     }else{
       res.send({ status: 0, text: "Nie znaleziono posta..."})
     }

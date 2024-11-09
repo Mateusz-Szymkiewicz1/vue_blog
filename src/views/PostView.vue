@@ -72,7 +72,7 @@
     }
     const sendReview = () => {
       if(!review_name.value || !review_email.value){
-        emit("toast", {type:"error", msg: "Podaj nazwę użytkownika/email!"})
+        emit("toast", {type:"error", msg: "Podaj nazwę użytkownika oraz email!"})
         return;
       }
       if(!review_text.value && !rating.value){
@@ -87,6 +87,24 @@
         emit("toast", {type:"error", msg: "Błędny email!"})
         return;
       }
+      // fetch("http://localhost:3000/dodajopinie", {
+      //   credentials: 'include',
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //       id: post.value.id,
+      //       email: review_email.value,
+      //       podpis: review_name.value,
+      //       tekst: review_text.value,
+      //       ocena: rating.value
+      //   })
+      // }).then(res => res.json()).then(res => {
+      //   if(res == "done"){
+      //     emit("toast", {type:"message", msg: "Dodano opinię!"})
+      //   }
+      // })
     }
 </script>
 
@@ -113,8 +131,12 @@
         <textarea v-model="review_text" class="mt-5 rounded p-3 w-96 h-48 bg-purple-200 dark:bg-neutral-800" placeholder="Napisz co myślisz..."></textarea><br>
         <input v-model="review_name" type="text" class="mt-2 bg-purple-200 w-96 rounded dark:bg-neutral-800 p-3" placeholder="Podpis"><br>
         <input v-model="review_email" type="email" class="mt-3 bg-purple-200 w-96 rounded dark:bg-neutral-800 p-3" placeholder="E-mail (niewidoczny)"><br/>
-        <label class="float-left dark:text-slate-200 text-lg pt-5 mr-3">Ocena (opcjonalne): </label><star-rating class="my-5" :star-size="30" active-color="#7e22ce" :show-rating="false" @update:rating="setRating"></star-rating>
-        <div @click="sendReview" class="rounded-md mt-5 cursor-pointer text-white hover:bg-violet-500 bg-violet-600 w-fit p-2 px-4"><i class="fa fa-send mr-2"></i>Wyślij</div>
+        <label class="float-left dark:text-slate-200 text-lg pt-5 mr-3">Ocena: </label><star-rating class="my-5" :star-size="30" active-color="#7e22ce" :show-rating="false" @update:rating="setRating"></star-rating>
+        <div @click="sendReview" class="rounded-md my-5 mb-10 cursor-pointer text-white hover:bg-violet-500 bg-violet-600 w-fit p-2 px-4"><i class="fa fa-send mr-2"></i>Wyślij</div>
+        <div v-for="opinia in post.opinie" class="bg-neutral-800 mt-3 p-5">
+          <h3 class="text-2xl">{{ opinia.podpis }} {{ opinia.ocena ? " - "+opinia.ocena+"/5" : "" }}</h3>
+          <p class="text-lg mt-3">{{ opinia.tekst }}</p>
+        </div>
       </div>
     </div>
 </template>

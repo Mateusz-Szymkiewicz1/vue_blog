@@ -129,6 +129,7 @@
         </select>
         <div @click="usun" class="rounded-md cursor-pointer text-sm text-white bg-violet-600 w-fit p-2 px-4"><i class="fa fa-trash mr-2"></i>Usuń</div>
       </div>
+      <p class="m-3 mt-7 text-lg" v-if="messages.length < 1">Pusto...</p>
       <div @click="show_message" v-for="message in messages.slice(0, message_limit)" class="text-indigo-950 dark:text-slate-200 text-xl m-3 flex justify-between break-all flex-wrap dark:bg-neutral-800 bg-violet-200 gap-1 p-4 cursor-pointer" :data-text="message.tresc">
         <div>
           <h2 class="font-bold mr-5"><input type="checkbox" @click.stop :data-id="message.id">&nbsp;{{ message.tytul }}</h2>

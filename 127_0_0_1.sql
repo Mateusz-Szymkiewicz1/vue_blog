@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Lip 07, 2024 at 05:46 PM
+-- Generation Time: Lis 09, 2024 at 02:58 PM
 -- Wersja serwera: 10.4.32-MariaDB
 -- Wersja PHP: 8.2.12
 
@@ -20,9 +20,23 @@ SET time_zone = "+00:00";
 --
 -- Database: `vue_blog`
 --
-DROP DATABASE IF EXISTS `vue_blog`;
 CREATE DATABASE IF NOT EXISTS `vue_blog` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `vue_blog`;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `opinie`
+--
+
+CREATE TABLE `opinie` (
+  `id` int(11) NOT NULL,
+  `post` int(11) NOT NULL,
+  `email` text NOT NULL,
+  `podpis` text NOT NULL,
+  `tekst` text NOT NULL,
+  `ocena` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -64,7 +78,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`sid`, `session`, `expires`) VALUES
-('ahG-aCOUPZeOdSWwVAAysRZTdgM6mkfS', '{\"cookie\":{\"originalMaxAge\":172800000,\"expires\":\"2024-07-09T15:43:12.701Z\",\"httpOnly\":true,\"path\":\"/\"},\"user\":\"admin\"}', 1720539793);
+('O58ofs_CsqH2uS4xQaKOB09Qqz3kEszW', '{\"cookie\":{\"originalMaxAge\":172800000,\"expires\":\"2024-11-11T10:02:42.605Z\",\"httpOnly\":true,\"path\":\"/\"},\"user\":\"admin\"}', 1731319363);
 
 -- --------------------------------------------------------
 
@@ -105,6 +119,13 @@ CREATE TABLE `wiadomosci` (
 --
 
 --
+-- Indeksy dla tabeli `opinie`
+--
+ALTER TABLE `opinie`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `post` (`post`);
+
+--
 -- Indeksy dla tabeli `posty`
 --
 ALTER TABLE `posty`
@@ -133,6 +154,12 @@ ALTER TABLE `wiadomosci`
 --
 
 --
+-- AUTO_INCREMENT for table `opinie`
+--
+ALTER TABLE `opinie`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `posty`
 --
 ALTER TABLE `posty`
@@ -149,6 +176,16 @@ ALTER TABLE `uzytkownicy`
 --
 ALTER TABLE `wiadomosci`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `opinie`
+--
+ALTER TABLE `opinie`
+  ADD CONSTRAINT `opinie_ibfk_1` FOREIGN KEY (`post`) REFERENCES `posty` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

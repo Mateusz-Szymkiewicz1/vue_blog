@@ -142,6 +142,12 @@ app.post('/usunkonto', (req,res) => {
   })
 })
 
+app.post('/usunopinie', (req,res) => {
+  connection.query(`DELETE FROM opinie WHERE email = ?`,[req.body.email], (err, rows, fields) => {
+    res.json(`done`)
+  })
+})
+
 app.post('/wyslijwiadomosc', (req,res) => {
   connection.query(`INSERT INTO wiadomosci(imie,email,tytul,tresc,data) VALUES (?,?,?,?,NOW());`,[req.body.imie,req.body.email,req.body.tytul,req.body.tresc], (err, rows, fields) => {
     res.json("done")
@@ -149,7 +155,7 @@ app.post('/wyslijwiadomosc', (req,res) => {
 })
 
 app.post('/dodajopinie', (req,res) => {
-  connection.query(`SELECT * FROM opinie WHERE email = ?`,[req.body.email], (err, rows, fields) => {
+  connection.query(`SELECT * FROM opinie WHERE email = ? AND post = ?`,[req.body.email,req.body.id], (err, rows, fields) => {
     if(rows && rows.length > 0){
       res.send({status: 0, text: "Już wysłałeś opinię!"})
     }else{
@@ -157,6 +163,12 @@ app.post('/dodajopinie', (req,res) => {
         res.json("done")
       })
     }
+  })
+})
+
+app.post('/edytujopinie', (req,res) => {
+  connection.query(`UPDATE opinie SET tekst = ?, podpis = ?, ocena = ? WHERE email = ? AND post = ?`,[req.body.tekst,req.body.podpis,req.body.ocena,req.body.email,req.body.id], (err, rows, fields) => {
+    res.json("done")
   })
 })
 

@@ -173,7 +173,7 @@ app.post('/edytujopinie', (req,res) => {
 })
 
 app.post('/useropinia', (req,res) => {
-  connection.query(`SELECT * FROM opinie WHERE email = ?`,[req.body.email], (err, rows, fields) => {
+  connection.query(`SELECT * FROM opinie WHERE email = ? AND post = ?`,[req.body.email,req.body.post], (err, rows, fields) => {
     if(rows && rows.length > 0){
       res.send(rows[0])
     }else{

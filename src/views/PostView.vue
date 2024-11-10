@@ -20,22 +20,6 @@
                   (sDomain ? "; domain=" + sDomain : "") + 
                   (sPath ? "; path=" + sPath : "");
   }
-  if(document.cookie.split("=")[1]){
-    fetch("http://localhost:3000/useropinia", {
-        credentials: 'include',
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: document.cookie.split("=")[1]
-        })
-      }).then(res => res.json()).then(res => {
-        if(!res.text){
-          user_opinia.value = res
-        }
-    })
-  }
   fetch('http://localhost:3000/post/'+id+"?offset="+strona.value*1).then(res => res.json()).then(res => {
         if(res.status == 0){
             error.value = res.text
@@ -44,6 +28,23 @@
             post.value.data = post.value.data.slice(0, 10)
             if(post.value.tagi){
               post.value.tagi = JSON.parse(post.value.tagi)
+            }
+            if(document.cookie.split("=")[1]){
+              fetch("http://localhost:3000/useropinia", {
+                  credentials: 'include',
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    email: document.cookie.split("=")[1],
+                    post: post.value.id
+                  })
+                }).then(res => res.json()).then(res => {
+                  if(!res.text){
+                    user_opinia.value = res
+                  }
+              })
             }
         }
     })
@@ -199,6 +200,14 @@
       document.querySelector('.edit').classList.remove("hidden")
     }
     const editReview = async () => {
+      if(!edit_review_name.value){
+        emit("toast", {type:"error", msg: "Podaj nazwę użytkownika!"})
+        return;
+      }
+      if(!edit_rating.value && edit_review_text){
+        emit("toast", {type:"error", msg: "Nie przesyłaj pustej opinii!"})
+        return;
+      }
       if (document.querySelector(".decision")) document.querySelector('.decision').remove()
       const response = await decision().then(function () {
           document.querySelector(".decision").remove()
@@ -260,7 +269,7 @@
         <div @click="sendReview" class="rounded-md my-5 mb-10 cursor-pointer text-white hover:bg-violet-500 bg-violet-600 w-fit p-2 px-4"><i class="fa fa-send mr-2"></i>Wyślij</div>
         <div v-if="user_opinia">
           <div class="dark:bg-indigo-800 bg-violet-400 dark:text-slate-200 text-indigo-950 mt-3 p-5">
-            <h3 class="flex justify-between text-2xl font-semibold"><span>{{ user_opinia.podpis }} {{ user_opinia.ocena ? " - "+user_opinia.ocena+"/5" : "" }}<i v-if="user_opinia.ocena" class="fa ml-1 fa-star"></i></span><span><i class="fa fa-pencil text-amber-500 mr-4 cursor-pointer" @click="showEdit"></i><i @click="usunOpinie" class="fa fa-trash text-red-500 cursor-pointer"></i></span></h3>
+            <h3 class="flex justify-between text-2xl font-semibold"><span>{{ user_opinia.podpis }} {{ user_opinia.ocena ? " - "+user_opinia.ocena+"/5" : "" }}<i v-if="user_opinia.ocena" class="fa ml-1 fa-star"></i></span><span><i class="fa fa-pencil text-amber-600 mr-4 cursor-pointer" @click="showEdit"></i><i @click="usunOpinie" class="fa fa-trash text-red-600 cursor-pointer"></i></span></h3>
             <p class="mt-2 text-slate-700 dark:text-slate-300">{{ user_opinia.data.split("T")[0] }}</p>
             <p class="text-lg mt-2">{{ user_opinia.tekst }}</p>
           </div>
@@ -272,7 +281,8 @@
             <p class="text-lg mt-2">{{ opinia.tekst }}</p>
           </div>
         </div>
-        <Paginator @page="changePage" class="mt-3" :rows="20" :total-records="post.ilosc_opini"></Paginator>
+        <Paginator v-if="post.opinie && post.opinie.length > 0" @page="changePage" class="mt-3" :rows="20" :total-records="post.ilosc_opini"></Paginator>
+        <p v-else class="text-xl dark:text-slate-200">Brak opini...</p>
       </div>
     </div>
     <div className="edit hidden fixed top-0 bottom-0 right-0 left-0 bg-neutral-800 flex justify-center items-center" style="background: rgba(50,50,50,0.9)">
@@ -319,5 +329,6 @@
   }
   .p-paginator-page.p-paginator-page-selected{
     background-color: #7e22ce !important;
+    color: #fff !important;
   }
 </style>

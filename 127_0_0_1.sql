@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Lis 09, 2024 at 02:58 PM
+-- Generation Time: Lis 10, 2024 at 01:02 PM
 -- Wersja serwera: 10.4.32-MariaDB
 -- Wersja PHP: 8.2.12
 
@@ -35,8 +35,21 @@ CREATE TABLE `opinie` (
   `email` text NOT NULL,
   `podpis` text NOT NULL,
   `tekst` text NOT NULL,
-  `ocena` int(11) NOT NULL
+  `ocena` int(11) DEFAULT NULL,
+  `data` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `opinie`
+--
+
+INSERT INTO `opinie` (`id`, `post`, `email`, `podpis`, `tekst`, `ocena`, `data`) VALUES
+(1, 1, 'asdsad@asdas.pl', 'asdasd', 'asdasdas dasdasdasdsad', 2, '2024-10-10 10:36:14'),
+(2, 1, 'qweqwe@aads.pl', 'qweqwe', 'qweqweqweqweqweqweqweqweqwewqeqweqweqweqwewqe', NULL, '2024-11-10 11:36:14'),
+(3, 1, 'dasdas@aasdasd.pl', 'asdas', 'asdasd', NULL, '2024-11-10 11:48:28'),
+(4, 1, 'qweqwe@ads.pl', 'qweqwe', 'qweqwe', NULL, '2024-11-10 11:49:46'),
+(5, 1, 'cv@a.pl', 'cvvc', 'cvvccv', NULL, '2024-11-10 11:51:17'),
+(6, 1, 'bbb@ccc.pl', 'bbb', 'bbbb', NULL, '2024-11-10 11:54:18');
 
 -- --------------------------------------------------------
 
@@ -157,7 +170,7 @@ ALTER TABLE `wiadomosci`
 -- AUTO_INCREMENT for table `opinie`
 --
 ALTER TABLE `opinie`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `posty`

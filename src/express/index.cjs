@@ -63,10 +63,15 @@ app.get('/posty', (req,res) => {
 })
 
 app.get('/post/:id', (req,res) => {
-  connection.query(`SELECT * FROM posty WHERE id = ?`,[req.params.id], (err, rows, fields) => {
+  try{
+    parseInt(req.query.offset)
+  }catch(e){
+    req.query.offset = 0
+  }
+  connection.query(`SELECT posty.*, COUNT(opinie.id) AS ilosc_opini FROM posty LEFT JOIN opinie ON opinie.post = posty.id WHERE posty.id = ? GROUP BY posty.id`,[req.params.id], (err, rows, fields) => {
     if(rows && rows.length == 1){
-      connection.query(`SELECT * FROM opinie WHERE opinie.post = ?`,[req.params.id], (err2, rows2, fields2) => {
-        rows[0].opinie = [...rows2]
+      connection.query(`SELECT * FROM opinie WHERE opinie.post = ? ORDER BY opinie.data DESC LIMIT 20 OFFSET ${req.query.offset}`,[req.params.id], (err2, rows2, fields2) => {
+        if(rows2) rows[0].opinie = [...rows2]
         res.send(rows)
       })
     }else{
@@ -143,6 +148,27 @@ app.post('/wyslijwiadomosc', (req,res) => {
   })
 })
 
+app.post('/dodajopinie', (req,res) => {
+  connection.query(`SELECT * FROM opinie WHERE email = ?`,[req.body.email], (err, rows, fields) => {
+    if(rows && rows.length > 0){
+      res.send({status: 0, text: "Już wysłałeś opinię!"})
+    }else{
+      connection.query(`INSERT INTO opinie(post,email,podpis,tekst,ocena,data) VALUES (?,?,?,?,?,NOW());`,[req.body.id,req.body.email,req.body.podpis,req.body.tekst,req.body.ocena], (err, rows, fields) => {
+        res.json("done")
+      })
+    }
+  })
+})
+
+app.post('/useropinia', (req,res) => {
+  connection.query(`SELECT * FROM opinie WHERE email = ?`,[req.body.email], (err, rows, fields) => {
+    if(rows && rows.length > 0){
+      res.send(rows[0])
+    }else{
+      res.send({status: 0, text: "Nie znaleziono opini!"})
+    }
+  })
+})
 
 app.post('/usunpost', (req,res) => {
   if(!req.session.user) return

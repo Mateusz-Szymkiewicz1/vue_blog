@@ -1,15 +1,35 @@
 <script setup>
   import { useRoute, useRouter } from 'vue-router'
-  import { ref, onUpdated } from 'vue'
+  import { ref, onUpdated, watch } from 'vue'
   import { decision } from '../composables/Decision.vue'
   import StarRating from 'vue-star-rating'
+  import Paginator from 'primevue/paginator';
   const emit = defineEmits(['toast'])
   const route = useRoute()
   const router = useRouter()
   const id = route.params.id
   const error = ref("")
   const post = ref({})
-  fetch('http://localhost:3000/post/'+id).then(res => res.json()).then(res => {
+  const strona = ref(0)
+  const user_email = ref(document.cookie.split("=")[1])
+  const user_opinia = ref()
+  if(document.cookie.split("=")[1]){
+    fetch("http://localhost:3000/useropinia", {
+        credentials: 'include',
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: document.cookie.split("=")[1]
+        })
+      }).then(res => res.json()).then(res => {
+        if(!res.text){
+          user_opinia.value = res
+        }
+    })
+  }
+  fetch('http://localhost:3000/post/'+id+"?offset="+strona.value*1).then(res => res.json()).then(res => {
         if(res.status == 0){
             error.value = res.text
         }else{
@@ -19,6 +39,15 @@
               post.value.tagi = JSON.parse(post.value.tagi)
             }
         }
+    })
+  watch(strona,() => {
+    fetch('http://localhost:3000/post/'+id+"?offset="+strona.value*20).then(res => res.json()).then(res => {
+        if(res.status == 0){
+            error.value = res.text
+        }else{
+            post.value.opinie = res[0].opinie
+        }
+    })
   })
 
   const user = ref('')
@@ -87,24 +116,38 @@
         emit("toast", {type:"error", msg: "Błędny email!"})
         return;
       }
-      // fetch("http://localhost:3000/dodajopinie", {
-      //   credentials: 'include',
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //       id: post.value.id,
-      //       email: review_email.value,
-      //       podpis: review_name.value,
-      //       tekst: review_text.value,
-      //       ocena: rating.value
-      //   })
-      // }).then(res => res.json()).then(res => {
-      //   if(res == "done"){
-      //     emit("toast", {type:"message", msg: "Dodano opinię!"})
-      //   }
-      // })
+      if(user_email.value){
+        emit("toast", {type:"error", msg: "Już napisałeś opinię!"})
+        return;
+      }
+      fetch("http://localhost:3000/dodajopinie", {
+        credentials: 'include',
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            id: post.value.id,
+            email: review_email.value,
+            podpis: review_name.value,
+            tekst: review_text.value,
+            ocena: rating.value
+        })
+      }).then(res => res.json()).then(res => {
+        if(res == "done"){
+          document.cookie = "email="+review_email.value;
+          review_email.value = ""
+          review_name.value = ""
+          review_text.value = ""
+          emit("toast", {type:"message", msg: "Dodano opinię!"})
+          router.go(0);
+        }else{
+          emit("toast", {type:"error", msg: res.text})
+        }
+      })
+    }
+    const changePage = (e) => {
+      strona.value = e.page
     }
 </script>
 
@@ -127,16 +170,27 @@
       <img v-if="post.img" :src="'../../photos/'+post.img" onerror="this.src='../src/assets/placeholder.png'">
       <p class="text-lg dark:text-slate-400 py-10" v-html="post.tresc"></p>
       <div class="mb-10">
-        <h3 class="text-2xl mt-10 font-bold">Opinie</h3>
+        <h3 class="text-2xl mt-10 font-bold">Opinie ({{ post.ilosc_opini }})</h3>
         <textarea v-model="review_text" class="mt-5 rounded p-3 w-96 h-48 bg-purple-200 dark:bg-neutral-800" placeholder="Napisz co myślisz..."></textarea><br>
         <input v-model="review_name" type="text" class="mt-2 bg-purple-200 w-96 rounded dark:bg-neutral-800 p-3" placeholder="Podpis"><br>
         <input v-model="review_email" type="email" class="mt-3 bg-purple-200 w-96 rounded dark:bg-neutral-800 p-3" placeholder="E-mail (niewidoczny)"><br/>
         <label class="float-left dark:text-slate-200 text-lg pt-5 mr-3">Ocena: </label><star-rating class="my-5" :star-size="30" active-color="#7e22ce" :show-rating="false" @update:rating="setRating"></star-rating>
         <div @click="sendReview" class="rounded-md my-5 mb-10 cursor-pointer text-white hover:bg-violet-500 bg-violet-600 w-fit p-2 px-4"><i class="fa fa-send mr-2"></i>Wyślij</div>
-        <div v-for="opinia in post.opinie" class="bg-neutral-800 mt-3 p-5">
-          <h3 class="text-2xl">{{ opinia.podpis }} {{ opinia.ocena ? " - "+opinia.ocena+"/5" : "" }}</h3>
-          <p class="text-lg mt-3">{{ opinia.tekst }}</p>
+        <div v-if="user_opinia">
+          <div class="dark:bg-indigo-800 bg-violet-400 dark:text-slate-200 text-indigo-950 mt-3 p-5">
+            <h3 class="flex justify-between text-2xl font-semibold"><span>{{ user_opinia.podpis }} {{ user_opinia.ocena ? " - "+user_opinia.ocena+"/5" : "" }}</span><span><i class="fa fa-pencil text-amber-500 mr-4 cursor-pointer"></i><i class="fa fa-trash text-red-500 cursor-pointer"></i></span></h3>
+            <p class="mt-2 text-slate-700 dark:text-slate-300">{{ user_opinia.data.split("T")[0] }}</p>
+            <p class="text-lg mt-2">{{ user_opinia.tekst }}</p>
+          </div>
         </div>
+        <div v-for="opinia in post.opinie">
+          <div v-if="opinia.email != user_email" class="dark:bg-neutral-800 bg-violet-200 dark:text-slate-200 text-indigo-900 mt-3 p-5">
+            <h3 class="text-2xl font-semibold">{{ opinia.podpis }} {{ opinia.ocena ? " - "+opinia.ocena+"/5" : "" }}</h3>
+            <p class="mt-2 text-slate-500 dark:text-slate-300">{{ opinia.data.split("T")[0] }}</p>
+            <p class="text-lg mt-2">{{ opinia.tekst }}</p>
+          </div>
+        </div>
+        <Paginator @page="changePage" class="mt-3" :rows="20" :total-records="post.ilosc_opini"></Paginator>
       </div>
     </div>
 </template>
@@ -168,5 +222,8 @@
   }
   .post blockquote{
     @apply p-4 my-4 border-s-4 border-violet-600 bg-neutral-100 dark:bg-neutral-800
+  }
+  .p-paginator-page.p-paginator-page-selected{
+    background-color: #7e22ce !important;
   }
 </style>

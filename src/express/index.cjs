@@ -196,11 +196,34 @@ app.post('/usunpost', (req,res) => {
   })
 })
 
+const saveBase64Images = (html) => {
+  const imgRegex = /<img[^>]+src="data:image\/([^;]+);base64,([^"]+)"[^>]*>/g;
+  let match;
+  let imgIndex = 0;
+  let newHtml = html;
+
+  while ((match = imgRegex.exec(html)) !== null) {
+    const ext = match[1] === 'jpeg' ? 'jpg' : match[1];
+    const base64Data = match[2];
+    const buffer = Buffer.from(base64Data, 'base64');
+    const filename = `postimg_${Date.now()}_${imgIndex}.${ext}`;
+    const filepath = path.join(__dirname, '../../photos', filename);
+
+    fs.writeFileSync(filepath, buffer);
+
+    // Replace base64 src with file path
+    newHtml = newHtml.replace(match[0], match[0].replace(match[0].match(/src="[^"]+"/)[0], `src="../../photos/${filename}"`));
+    imgIndex++;
+  }
+  return newHtml;
+};
+
 app.post("/dodajpost", upload.single("img"), dodajPost);
 
 function dodajPost(req, res) {
   if(!req.session.user) return
   let filename = ""
+  req.body.tekst = saveBase64Images(req.body.tekst);
   if(req.file){
     filename = req.file.filename
   }
